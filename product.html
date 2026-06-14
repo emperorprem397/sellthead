@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — SELLTHEAD</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Premium Product Page Styles ── */
+    .pd2-page { padding-top: 80px; min-height: 100vh; }
+
+    .pd2-wrap {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* Left — image gallery */
+    .pd2-gallery { position: relative; }
+    .pd2-breadcrumb {
+      font-family: var(--font-montserrat); font-size: 10px; font-weight: 600;
+      letter-spacing: .1em; color: var(--white2); margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .pd2-breadcrumb a { color: var(--white2); transition: color .2s; }
+    .pd2-breadcrumb a:hover { color: var(--accent); }
+    .pd2-breadcrumb span { color: var(--grey); }
+
+    .pd2-main-img-wrap {
+      position: relative; width: 100%;
+      background: rgba(14,16,22,.8);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 22px;
+      overflow: hidden; aspect-ratio: 3/4;
+      box-shadow: 0 4px 6px rgba(0,0,0,.2), 0 14px 32px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.05) inset;
+      cursor: zoom-in;
+    }
+    .pd2-main-img {
+      width: 100%; height: 100%; object-fit: contain;
+      transition: transform .5s ease; display: block;
+      padding: .4rem;
+    }
+    .pd2-main-img-wrap:hover .pd2-main-img { transform: scale(1.03); }
+    .pd2-fs-btn {
+      position: absolute; bottom: .75rem; right: .75rem; z-index: 3;
+      background: rgba(5,7,11,.7); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+      color: rgba(255,255,255,.8); font-size: .7rem;
+      font-family: var(--font-montserrat); font-weight: 700;
+      letter-spacing: .06em; padding: .32rem .65rem;
+      cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: .3rem;
+      opacity: 0; pointer-events: none;
+    }
+    .pd2-main-img-wrap:hover .pd2-fs-btn { opacity: 1; pointer-events: auto; }
+    .pd2-fs-btn:hover { background: rgba(232,28,28,.25); border-color: rgba(232,28,28,.4); color: #fff; }
+    .img-lightbox {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,.92); backdrop-filter: blur(8px);
+      flex-direction: column; align-items: center; justify-content: center; padding: 1rem; gap: .7rem;
+    }
+    .img-lightbox.open { display: flex; }
+    .img-lightbox-img {
+      max-width: 95vw; max-height: 84vh;
+      object-fit: contain; border-radius: 14px;
+      box-shadow: 0 0 80px rgba(0,0,0,.8);
+      user-select: none;
+    }
+    .img-lightbox-close {
+      position: absolute; top: 1rem; right: 1.2rem;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50%; width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.1rem; cursor: pointer; transition: background .2s;
+    }
+    .img-lightbox-close:hover { background: rgba(232,28,28,.5); }
+    .img-lightbox-hint { color: rgba(255,255,255,.35); font-size: .72rem; font-family: var(--font-montserrat); letter-spacing: .06em; }
+    .img-lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%; width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.2rem; cursor: pointer; transition: background .2s;
+    }
+    .img-lightbox-nav:hover { background: rgba(232,28,28,.3); }
+    .img-lightbox-prev { left: 1rem; }
+    .img-lightbox-next { right: 1rem; }
+
+    .pd2-img-badge {
+      position: absolute; top: 1rem; left: 1rem;
+      background: var(--accent); color: #fff;
+      font-family: var(--font-montserrat); font-size: 10px; font-weight: 800;
+      letter-spacing: .15em; padding: 4px 10px; border-radius: 2px;
+    }
+
+    .pd2-thumbs {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: .6rem; margin-top: .8rem;
+    }
+    .pd2-thumb {
+      aspect-ratio: 1/1; border-radius: var(--radius-sm);
+      overflow: hidden; cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color .2s, opacity .2s;
+      background: rgba(14,16,22,.8);
+    }
+    .pd2-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pd2-thumb.active { border-color: var(--accent); }
+    .pd2-thumb:hover { opacity: .85; }
+
+    /* Right — product info */
+    .pd2-info { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .pd2-brand {
+      font-family: var(--font-montserrat); font-size: 9px; font-weight: 700;
+      letter-spacing: .4em; color: var(--accent); text-transform: uppercase;
+    }
+    .pd2-title {
+      font-family: var(--font-montserrat); font-size: 1.6rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: -.01em; line-height: 1.15;
+      color: var(--white); margin-top: .2rem;
+    }
+    .pd2-type {
+      font-family: var(--font-montserrat); font-size: 10px; font-weight: 600;
+      letter-spacing: .15em; color: var(--white2); text-transform: uppercase;
+    }
+
+    .pd2-rating-row {
+      display: flex; align-items: center; gap: .75rem;
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      padding: .7rem 0;
+    }
+    .pd2-stars { color: #f5a623; font-size: .9rem; letter-spacing: 1px; }
+    .pd2-rating-val {
+      font-family: var(--font-montserrat); font-size: .82rem; font-weight: 700;
+      color: var(--white);
+    }
+    .pd2-reviews {
+      font-family: var(--font-montserrat); font-size: .72rem; font-weight: 600;
+      color: var(--white2);
+    }
+
+    .pd2-price-row { display: flex; align-items: baseline; gap: 1rem; }
+    .pd2-price-new {
+      font-family: var(--font-montserrat); font-size: 2rem; font-weight: 900;
+      color: var(--white); letter-spacing: -.02em;
+    }
+    .pd2-price-old {
+      font-family: var(--font-montserrat); font-size: 1rem; font-weight: 600;
+      color: var(--grey); text-decoration: line-through;
+    }
+    .pd2-discount {
+      font-family: var(--font-montserrat); font-size: .75rem; font-weight: 800;
+      color: #fff; background: var(--accent); padding: 3px 8px; border-radius: 2px;
+      letter-spacing: .05em;
+    }
+    .pd2-tax { font-size: .72rem; color: var(--grey); font-family: var(--font-montserrat); }
+
+    /* Size selector */
+    .pd2-size-header {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .pd2-size-label {
+      font-family: var(--font-montserrat); font-size: 10px; font-weight: 700;
+      letter-spacing: .25em; text-transform: uppercase; color: var(--white);
+    }
+    .pd2-size-guide {
+      font-family: var(--font-montserrat); font-size: 10px; font-weight: 600;
+      color: var(--accent); letter-spacing: .1em; cursor: pointer;
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+    .pd2-sizes { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .5rem; }
+    .pd2-size-btn {
+      font-family: var(--font-montserrat); font-size: .78rem; font-weight: 700;
+      letter-spacing: .08em; min-width: 52px; padding: .55rem .8rem;
+      text-align: center; background: rgba(255,255,255,.04);
+      border: 1.5px solid var(--glass-border); border-radius: var(--radius-sm);
+      color: var(--white); cursor: pointer; transition: all .18s;
+    }
+    .pd2-size-btn:hover { border-color: rgba(255,255,255,.3); }
+    .pd2-size-btn.active {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
+
+    /* Action buttons */
+    .pd2-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+    .pd2-btn-cart {
+      font-family: var(--font-montserrat); font-size: .78rem; font-weight: 800;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: .9rem; background: rgba(255,255,255,.06);
+      border: 1.5px solid rgba(255,255,255,.25); color: var(--white);
+      border-radius: var(--radius-sm); cursor: pointer; transition: all .2s;
+    }
+    .pd2-btn-cart:hover { background: rgba(255,255,255,.12); border-color: var(--white); }
+    .pd2-btn-buy {
+      font-family: var(--font-montserrat); font-size: .78rem; font-weight: 800;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: .9rem; background: var(--accent); border: none;
+      color: #fff; border-radius: var(--radius-sm); cursor: pointer; transition: all .2s;
+    }
+    .pd2-btn-buy:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* Quick info row */
+    .pd2-quick-info {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: .5rem; margin-top: .3rem;
+    }
+    .pd2-qi {
+      background: rgba(255,255,255,.03); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm); padding: .6rem .5rem; text-align: center;
+    }
+    .pd2-qi-icon { font-size: 1rem; display: block; margin-bottom: .2rem; }
+    .pd2-qi-label {
+      font-family: var(--font-montserrat); font-size: 9px; font-weight: 700;
+      letter-spacing: .1em; color: var(--white2); text-transform: uppercase;
+    }
+
+    /* Description accordion */
+    .pd2-accordion { border-top: 1px solid var(--glass-border); }
+    .pd2-acc-item { border-bottom: 1px solid var(--glass-border); }
+    .pd2-acc-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 0; cursor: pointer;
+      font-family: var(--font-montserrat); font-size: .82rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase; color: var(--white);
+    }
+    .pd2-acc-header:hover { color: var(--accent); }
+    .pd2-acc-arrow {
+      font-size: 1rem; transition: transform .25s; display: inline-block;
+      color: var(--accent);
+    }
+    .pd2-acc-item.open .pd2-acc-arrow { transform: rotate(45deg); }
+    .pd2-acc-body {
+      font-family: 'Barlow', sans-serif; font-size: .87rem; line-height: 1.75;
+      color: var(--white2); max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .25s;
+    }
+    .pd2-acc-item.open .pd2-acc-body { max-height: 600px; padding-bottom: 1rem; }
+    .pd2-highlights { list-style: none; display: flex; flex-direction: column; gap: .4rem; padding: 0; }
+    .pd2-highlights li::before { content: "✦ "; color: var(--accent); font-size: .7rem; }
+    .pd2-highlights li {
+      font-family: var(--font-montserrat); font-size: .78rem; font-weight: 500;
+      color: var(--white2); letter-spacing: .03em;
+    }
+
+    /* Size chart modal */
+    .sc-modal-bg {
+      position: fixed; inset: 0; background: rgba(0,0,0,.75);
+      backdrop-filter: blur(8px); z-index: 2000;
+      display: none; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .sc-modal-bg.open { display: flex; }
+    .sc-modal {
+      background: #0d0f14; border: 1px solid var(--glass-border);
+      border-radius: var(--radius); max-width: 520px; width: 100%;
+      padding: 2rem; position: relative;
+      font-family: var(--font-montserrat);
+    }
+    .sc-modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(255,255,255,.06); border: 1px solid var(--glass-border);
+      color: var(--white); width: 32px; height: 32px; border-radius: 50%;
+      font-size: .9rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .sc-title {
+      font-size: .95rem; font-weight: 800; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--white); margin-bottom: 1.2rem;
+    }
+    .sc-table { width: 100%; border-collapse: collapse; }
+    .sc-table th {
+      font-size: 9px; font-weight: 700; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--accent);
+      border-bottom: 1px solid var(--glass-border); padding: .5rem .75rem; text-align: left;
+    }
+    .sc-table td {
+      font-size: .82rem; font-weight: 600; color: var(--white2);
+      padding: .65rem .75rem; border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .sc-table tr:hover td { color: var(--white); background: rgba(255,255,255,.02); }
+    .sc-note {
+      margin-top: 1rem; font-size: .72rem; font-weight: 500; color: var(--grey);
+      line-height: 1.6;
+    }
+
+    /* Fabric specs strip */
+    .pd2-specs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .5rem;
+      margin-top: .3rem;
+    }
+    .pd2-spec {
+      background: rgba(255,255,255,.03); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm); padding: .6rem .8rem;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .pd2-spec-key {
+      font-size: 9px; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--grey);
+      font-family: var(--font-montserrat);
+    }
+    .pd2-spec-val {
+      font-size: .8rem; font-weight: 700; color: var(--white);
+      font-family: var(--font-montserrat);
+    }
+
+    /* Related section */
+    .pd2-related {
+      max-width: 1200px; margin: 0 auto;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--glass-border);
+    }
+    .pd2-related-title {
+      font-family: var(--font-montserrat); font-size: 1.1rem; font-weight: 900;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--white);
+      margin-bottom: 2rem;
+    }
+
+    /* ── REVIEWS SECTION ── */
+    .reviews-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--glass-border);
+    }
+    .reviews-section-title {
+      font-family: var(--font-montserrat); font-size: 1.1rem; font-weight: 900;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .reviews-overall {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 2rem;
+    }
+    .reviews-big-rating {
+      font-size: 3rem; font-weight: 900; color: #e81c1c; line-height: 1;
+    }
+    .reviews-stars-big { color: #f5a623; font-size: 1.1rem; }
+    .reviews-count { font-size: 0.82rem; color: #666; margin-top: 3px; }
+    .reviews-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;
+    }
+    .review-card {
+      background: rgba(13,13,15,0.7); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 18px; transition: border-color 0.3s;
+    }
+    .review-card:hover { border-color: rgba(232,28,28,0.25); }
+    .review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .review-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(232,28,28,0.15); color: #e81c1c;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.95rem; flex-shrink: 0;
+    }
+    .review-meta { flex: 1; }
+    .review-name { font-size: 0.88rem; font-weight: 700; color: #eee; }
+    .review-date { font-size: 0.72rem; color: #555; margin-top: 1px; }
+    .review-stars { color: #f5a623; font-size: 0.85rem; margin-bottom: 6px; }
+    .review-text { font-size: 0.82rem; color: #888; line-height: 1.55; margin-bottom: 10px; }
+    .review-verified { font-size: 0.7rem; color: #00cc88; font-weight: 600; }
+    .review-photos { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .review-photo {
+      width: 72px; height: 72px; border-radius: 8px; object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.08); cursor: pointer; transition: opacity 0.2s;
+    }
+    .review-photo:hover { opacity: 0.8; }
+
+    @media (max-width: 860px) {
+      .pd2-wrap { grid-template-columns: 1fr; gap: 2rem; }
+      .pd2-title { font-size: 1.3rem; }
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .pd2-actions { grid-template-columns: 1fr; }
+      .pd2-quick-info { grid-template-columns: repeat(3,1fr); }
+    }
+  </style>
+</head>
+<body class="inner-page">
+<div id="cursorDot"></div>
+<div id="cursorRing"></div>
+
+<!-- INNER PAGE TOPBAR -->
+<div id="innerTopbar">
+  <div class="inner-topbar-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo_icon.png" alt="S" class="nav-logo-svg" onerror="this.style.display='none'" />
+      <span class="logo-text">SELLTHEAD</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:1.2rem">
+      <a href="shop.html" style="font-family:var(--font-montserrat);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white2);transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--white2)'">SHOP</a>
+      <a href="index.html#collabs" style="font-family:var(--font-montserrat);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white2);transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--white2)'">COLLABS</a>
+      <a href="myorders.html" style="font-family:var(--font-montserrat);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white2);transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--white2)'">ORDERS</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <button class="nav-icon" id="loginBtn" title="Login / Register">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button class="cart-pill" id="cartBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-pill-label">CART (<span id="cartCount">0</span>)</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-bg" id="cartBg"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-sidebar-header"><h3>YOUR CART</h3><button id="closeCart">✕</button></div>
+  <div class="cart-sidebar-items" id="cartItems"></div>
+  <div class="cart-sidebar-footer">
+    <div class="cart-total"><span>TOTAL</span><span id="cartTotal">₹0</span></div>
+    <a href="checkout.html" class="btn-red full-btn">CHECKOUT →</a>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeLoginModal">✕</button>
+    <div id="loginFormWrap">
+      <h2>WELCOME BACK</h2>
+      <input class="form-input" id="loginEmail" type="email" placeholder="Email address" />
+      <input class="form-input" id="loginPassword" type="password" placeholder="Password" />
+      <button class="btn-red full-btn" id="doLogin">LOGIN</button>
+      <p class="switch-form">New here? <a href="#" id="goRegister">Create account</a> · <a href="#" id="goForgot" style="color:var(--white2)">Forgot?</a></p>
+    </div>
+    <div id="registerFormWrap" style="display:none">
+      <h2>CREATE ACCOUNT</h2>
+      <input class="form-input" id="regName" type="text" placeholder="Full name" />
+      <input class="form-input" id="regEmail" type="email" placeholder="Email address" />
+      <input class="form-input" id="regPassword" type="password" placeholder="Password" />
+      <button class="btn-red full-btn" id="doRegister">CREATE ACCOUNT</button>
+      <p class="switch-form"><a href="#" id="goLogin">Already have an account? Login</a></p>
+    </div>
+    <div id="forgotFormWrap" style="display:none">
+      <h2>RESET PASSWORD</h2>
+      <input class="form-input" id="forgotEmail" type="email" placeholder="Your email" />
+      <button class="btn-red full-btn" id="doForgot">SEND RESET LINK</button>
+      <p class="switch-form"><a href="#" id="goLoginFromForgot">← Back to login</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- SIZE CHART MODAL -->
+<div class="sc-modal-bg" id="sizeChartModal">
+  <div class="sc-modal">
+    <button class="sc-modal-close" id="closeSizeChart">✕</button>
+    <p class="sc-title" id="scTitle">Size Chart</p>
+    <table class="sc-table" id="scTable">
+      <thead>
+        <tr>
+          <th>SIZE</th><th>CHEST (in)</th><th>LENGTH (in)</th>
+        </tr>
+      </thead>
+      <tbody id="scBody"></tbody>
+    </table>
+    <p class="sc-note" id="scNote">All measurements are in inches. Compression wear is a tight fit — give it time after wearing to feel comfortable. When in doubt, GO FOR A HIGHER SIZE.</p>
+  </div>
+</div>
+
+<!-- MAIN PRODUCT PAGE -->
+<div class="pd2-page">
+  <div class="pd2-wrap" id="productDetail">
+
+    <!-- LEFT: Image Gallery -->
+    <div class="pd2-gallery" id="pdGallery">
+      <p class="pd2-breadcrumb" id="pdBreadcrumb">
+        <a href="index.html">Home</a>
+        <span>›</span>
+        <a href="shop.html">Shop</a>
+        <span>›</span>
+        <span id="pdBreadTitle">Product</span>
+      </p>
+      <div class="pd2-main-img-wrap" onclick="openImgLightbox()">
+        <div class="pd2-img-badge" id="pdDiscountBadge"></div>
+        <img id="pdMainImg" class="pd2-main-img" src="" alt="Product" />
+        <button class="pd2-fs-btn" onclick="event.stopPropagation();openImgLightbox()">⛶ FULL VIEW</button>
+      </div>
+      <!-- Image Lightbox -->
+      <div class="img-lightbox" id="imgLightbox" onclick="closeImgLightbox()">
+        <button class="img-lightbox-close" onclick="event.stopPropagation();closeImgLightbox()">✕</button>
+        <button class="img-lightbox-nav img-lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)">‹</button>
+        <img class="img-lightbox-img" id="lightboxImg" src="" alt="Product" onclick="event.stopPropagation()"/>
+        <button class="img-lightbox-nav img-lightbox-next" onclick="event.stopPropagation();lightboxNav(1)">›</button>
+        <div class="img-lightbox-hint">TAP OUTSIDE TO CLOSE · ← → TO NAVIGATE</div>
+      </div>
+      <div class="pd2-thumbs" id="pdThumbs"></div>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="pd2-info" id="pdInfo">
+
+      <div>
+        <p class="pd2-brand" id="pdBrand"></p>
+        <h1 class="pd2-title" id="pdTitle"></h1>
+        <p class="pd2-type" id="pdType"></p>
+      </div>
+
+      <div class="pd2-rating-row">
+        <span class="pd2-stars" id="pdStars"></span>
+        <span class="pd2-rating-val" id="pdRatingVal"></span>
+        <span class="pd2-reviews" id="pdReviews"></span>
+      </div>
+
+      <div>
+        <div class="pd2-price-row">
+          <span class="pd2-price-new" id="pdPriceNew"></span>
+          <span class="pd2-price-old" id="pdPriceOld"></span>
+          <span class="pd2-discount" id="pdDiscountPct"></span>
+        </div>
+        <p class="pd2-tax">Inclusive of all taxes · Free delivery across India</p>
+      </div>
+
+      <!-- Size selector -->
+      <div>
+        <div class="pd2-size-header">
+          <p class="pd2-size-label">SELECT SIZE</p>
+          <span class="pd2-size-guide" id="sizeGuideBtn">SIZE GUIDE ↗</span>
+        </div>
+        <div class="pd2-sizes" id="pdSizes"></div>
+      </div>
+
+      <!-- Add to cart / Buy Now -->
+      <div class="pd2-actions">
+        <button class="pd2-btn-cart" id="pdAddCart">+ ADD TO CART</button>
+        <button class="pd2-btn-buy"  id="pdBuyNow">BUY NOW →</button>
+      </div>
+
+      <!-- Quick info strip -->
+      <div class="pd2-quick-info">
+        <div class="pd2-qi">
+          <span class="pd2-qi-icon">🚚</span>
+          <span class="pd2-qi-label">Free Delivery</span>
+        </div>
+        <div class="pd2-qi">
+          <span class="pd2-qi-icon">🔒</span>
+          <span class="pd2-qi-label">Secure Pay</span>
+        </div>
+        <div class="pd2-qi">
+          <span class="pd2-qi-icon">🔄</span>
+          <span class="pd2-qi-label">7-Day Return</span>
+        </div>
+      </div>
+
+      <!-- Fabric specs -->
+      <div class="pd2-specs" id="pdSpecs"></div>
+
+      <!-- Accordion: Description / Highlights -->
+      <div class="pd2-accordion">
+        <div class="pd2-acc-item open" id="accDesc">
+          <div class="pd2-acc-header" onclick="toggleAcc('accDesc')">
+            DESCRIPTION <span class="pd2-acc-arrow">+</span>
+          </div>
+          <div class="pd2-acc-body" id="pdDesc"></div>
+        </div>
+        <div class="pd2-acc-item" id="accHL">
+          <div class="pd2-acc-header" onclick="toggleAcc('accHL')">
+            HIGHLIGHTS <span class="pd2-acc-arrow">+</span>
+          </div>
+          <div class="pd2-acc-body" id="pdHighlights"></div>
+        </div>
+        <div class="pd2-acc-item" id="accPolicies">
+          <div class="pd2-acc-header" onclick="toggleAcc('accPolicies')">
+            DELIVERY & RETURNS <span class="pd2-acc-arrow">+</span>
+          </div>
+          <div class="pd2-acc-body">
+            <p>🚚 Free shipping on all orders across India.</p>
+            <p style="margin-top:.6rem">🔄 7-day return on defective or wrong items. WhatsApp us with order ID + photos.</p>
+            <p style="margin-top:.6rem">🔒 Pay securely via UPI / PhonePe. Order confirmation sent to your WhatsApp.</p>
+            <p style="margin-top:.6rem">💬 Support: <a href="https://wa.me/917568521210" style="color:var(--accent)">+91 75685 21210</a></p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.pd2-info -->
+  </div><!-- /.pd2-wrap -->
+
+  <!-- Related products -->
+  <div class="pd2-related">
+    <p class="pd2-related-title">YOU MAY ALSO <span class="accent">LIKE</span></p>
+    <div class="products-grid" id="relatedGrid"></div>
+  </div>
+
+  <!-- REVIEWS SECTION -->
+  <div class="reviews-section">
+    <p class="reviews-section-title">Customer <span class="accent">Reviews</span></p>
+    <div class="reviews-overall">
+      <div class="reviews-big-rating" id="reviewsBigRating">4.8</div>
+      <div>
+        <div class="reviews-stars-big">★★★★★</div>
+        <div class="reviews-count" id="reviewsTotalCount">127 verified reviews</div>
+      </div>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</div>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/917568521210" class="wa-float" target="_blank">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+/* ── Product Detail Page Logic ── */
+(function () {
+  const id = parseInt(new URLSearchParams(window.location.search).get('id'));
+  const p  = PRODUCTS.find(x => x.id === id);
+  if (!p) {
+    document.getElementById('productDetail').innerHTML =
+      '<p style="padding:4rem 2rem;color:var(--white2);grid-column:1/-1">Product not found. <a href="shop.html" style="color:var(--accent)">Browse shop →</a></p>';
+    return;
+  }
+
+  document.title = p.title + ' — SELLTHEAD';
+
+  // Breadcrumb
+  document.getElementById('pdBreadTitle').textContent = p.title;
+  document.getElementById('pdBreadcrumb').querySelector('span:last-of-type').textContent = p.shortTitle || p.title;
+
+  // Brand / Title / Type
+  document.getElementById('pdBrand').textContent = p.brand || 'SELLTHEAD';
+  document.getElementById('pdTitle').textContent = p.title;
+  document.getElementById('pdType').textContent = p.type || '';
+
+  // Rating
+  const ratingFull = Math.floor(p.rating || 4);
+  document.getElementById('pdStars').textContent = '★'.repeat(ratingFull) + (p.rating % 1 >= .5 ? '★' : '') + '☆'.repeat(5 - Math.ceil(p.rating || 4));
+  document.getElementById('pdRatingVal').textContent = (p.rating || 4).toFixed(1);
+  document.getElementById('pdReviews').textContent = '(' + (p.reviews || 0) + ' reviews)';
+
+  // Price — start with data.js, then patch from Firestore
+  function renderPrice(price, oldPrice) {
+    const disc = Math.round((1 - price / oldPrice) * 100);
+    document.getElementById('pdPriceNew').textContent = '₹' + price.toLocaleString('en-IN');
+    document.getElementById('pdPriceOld').textContent = '₹' + oldPrice.toLocaleString('en-IN');
+    document.getElementById('pdDiscountPct').textContent = disc > 0 ? disc + '% OFF' : '';
+    const badge = document.getElementById('pdDiscountBadge');
+    if(badge) badge.textContent = disc > 0 ? '-' + disc + '%' : 'NEW';
+  }
+  renderPrice(p.price, p.oldPrice);
+  // Patch live price from Firestore (admin changes)
+  function patchProductPrice() {
+    if (!window.db) { setTimeout(patchProductPrice, 600); return; }
+    window.db.collection('products').doc(String(id)).get().then(doc => {
+      if (!doc.exists) return;
+      const fs = doc.data();
+      const livePrice    = fs.price    !== undefined ? fs.price    : p.price;
+      const liveOldPrice = fs.oldPrice !== undefined ? fs.oldPrice : p.oldPrice;
+      if (livePrice !== p.price || liveOldPrice !== p.oldPrice) {
+        renderPrice(livePrice, liveOldPrice);
+      }
+      // Also update inStock
+      if (fs.inStock === false) {
+        const addBtn = document.querySelector('.pd2-btn-cart');
+        const buyBtn = document.querySelector('.pd2-btn-buy');
+        if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'OUT OF STOCK'; addBtn.style.opacity = '.5'; }
+        if (buyBtn) { buyBtn.disabled = true; buyBtn.style.opacity = '.5'; }
+      }
+    }).catch(() => {});
+  }
+  setTimeout(patchProductPrice, 400);
+
+  // Images
+  const imgs = (p.images && p.images.length) ? p.images : [p.image];
+  const mainImg = document.getElementById('pdMainImg');
+  mainImg.src = imgs[0];
+  mainImg.alt = p.title;
+
+  const thumbsEl = document.getElementById('pdThumbs');
+  imgs.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'pd2-thumb' + (i === 0 ? ' active' : '');
+    div.innerHTML = `<img src="${src}" alt="${p.title} view ${i+1}" />`;
+    div.addEventListener('click', () => {
+      mainImg.src = src;
+      thumbsEl.querySelectorAll('.pd2-thumb').forEach(t => t.classList.remove('active'));
+      div.classList.add('active');
+    });
+    thumbsEl.appendChild(div);
+  });
+
+  // Sizes
+  let selectedSize = p.sizes ? p.sizes[0] : 'M';
+  const sizesEl = document.getElementById('pdSizes');
+  (p.sizes || ['S','M','L','XL']).forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'pd2-size-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = s;
+    btn.addEventListener('click', () => {
+      selectedSize = s;
+      sizesEl.querySelectorAll('.pd2-size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+    sizesEl.appendChild(btn);
+  });
+
+  // Cart / Buy
+  document.getElementById('pdAddCart').addEventListener('click', () => Cart.add(p, selectedSize));
+  document.getElementById('pdBuyNow').addEventListener('click',  () => { Cart.add(p, selectedSize); location.href = 'checkout.html'; });
+
+  // Fabric specs
+  const specData = [];
+  if (p.fabric)  specData.push({ key: 'Fabric', val: p.fabric });
+  if (p.sleeve)  specData.push({ key: 'Sleeve', val: p.sleeve });
+  if (p.fit)     specData.push({ key: 'Fit', val: p.fit });
+  specData.push({ key: 'Origin', val: 'India' });
+  document.getElementById('pdSpecs').innerHTML = specData.map(s =>
+    `<div class="pd2-spec"><span class="pd2-spec-key">${s.key}</span><span class="pd2-spec-val">${s.val}</span></div>`
+  ).join('');
+
+  // Description
+  const descEl = document.getElementById('pdDesc');
+  descEl.innerHTML = (p.description || '').replace(/\n\n/g, '</p><p style="margin-top:.8rem">').replace(/^/, '<p>').replace(/$/, '</p>');
+
+  // Highlights
+  const hlEl = document.getElementById('pdHighlights');
+  if (p.highlights && p.highlights.length) {
+    hlEl.innerHTML = '<ul class="pd2-highlights">' + p.highlights.map(h => `<li>${h}</li>`).join('') + '</ul>';
+  } else {
+    document.getElementById('accHL').style.display = 'none';
+  }
+
+  // Size guide modal
+  const modal = document.getElementById('sizeChartModal');
+  document.getElementById('sizeGuideBtn').addEventListener('click', () => {
+    if (p.sizeChart && p.sizeChart.length) {
+      document.getElementById('scTitle').textContent = p.title + ' — SIZE CHART';
+      document.getElementById('scBody').innerHTML = p.sizeChart.map(r =>
+        `<tr><td>${r.size}</td><td>${r.chest}</td><td>${r.length}</td></tr>`
+      ).join('');
+    }
+    modal.classList.add('open');
+  });
+  document.getElementById('closeSizeChart').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  // Related products
+  const related = PRODUCTS.filter(x => x.id !== p.id);
+  document.getElementById('relatedGrid').innerHTML = related.map(rp => {
+    const d = Math.round((1 - rp.price / rp.oldPrice) * 100);
+    return `<div class="product-card fade-in" onclick="location.href='product.html?id=${rp.id}'" style="cursor:pointer">
+      <div class="product-img-wrap">
+        ${d > 0 ? `<span class="product-badge sale">-${d}%</span>` : ''}
+        <img src="${rp.image}" alt="${rp.title}" loading="lazy" />
+      </div>
+      <div class="product-info">
+        <div class="product-info-top">
+          <div class="product-name">${rp.title}</div>
+          <div class="product-price">₹${rp.price.toLocaleString('en-IN')}</div>
+        </div>
+        <div class="product-type">${rp.type}</div>
+        <div class="product-actions">
+          <button class="product-btn cart" onclick="event.stopPropagation();(function(){const q=PRODUCTS.find(x=>x.id===${rp.id});if(q)Cart.add(q,'M');})()">ADD TO CART</button>
+          <button class="product-btn buy"  onclick="event.stopPropagation();location.href='product.html?id=${rp.id}'">BUY NOW</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Fade in
+  setTimeout(() => {
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+  }, 80);
+
+  // Render reviews for this product
+  renderReviews(p.id);
+})();
+
+function toggleAcc(id) {
+  const item = document.getElementById(id);
+  item.classList.toggle('open');
+}
+
+  /* ── REVIEWS DATA ── */
+  const ALL_REVIEWS = {
+    4: { // Bullar Compression Tee
+      rating: 4.8,
+      total: 127,
+      reviews: [
+        { name:'Rahul S.', stars:5, date:'2 weeks ago', text:'Absolutely love this tee! The compression fit is perfect and the fabric is super breathable during my gym sessions. Worth every rupee!', photos:['images/review_1.jpg'], verified:true },
+        { name:'Arjun M.', stars:5, date:'3 weeks ago', text:'Best compression tee I\'ve used. Moisture wicking is excellent — stayed dry even during a 2-hour session. Fast delivery too!', photos:['images/review_2.jpg'], verified:true },
+        { name:'Vikash T.', stars:5, date:'1 month ago', text:'Great quality and the fit is amazing. Got compliments at the gym on day one. The fabric doesn\'t stretch out after washing either.', photos:['images/review_3.jpg','images/review_4.jpg'], verified:true },
+        { name:'Karan B.', stars:4, date:'1 month ago', text:'Really nice quality. Slight delay in shipping but the product made up for it. Would recommend for gym wear.', photos:[], verified:true },
+        { name:'Siddharth R.', stars:5, date:'5 weeks ago', text:'Second skin feel exactly as described. Wore it for my morning runs — extremely comfortable. Will buy more colors!', photos:[], verified:true },
+        { name:'Nikhil G.', stars:5, date:'6 weeks ago', text:'Premium quality at this price is unbelievable. The muscle compression support feels great and recovery seems faster.', photos:[], verified:true },
+        { name:'Prateek J.', stars:4, date:'2 months ago', text:'Good product overall. Fits true to size. The dry-fit technology actually works well. Minor complaint: wish there were more color options.', photos:[], verified:true }
+      ]
+    },
+    5: { // Wooden Parallettes
+      rating: 4.6,
+      total: 89,
+      reviews: [
+        { name:'Rohan K.', stars:5, date:'1 week ago', text:'Solid wooden construction. The non-slip base is excellent — doesn\'t move even on tiles. Great for L-sits and dips. Very sturdy!', photos:['images/parallettes_rv1.png'], verified:true },
+        { name:'Sameer P.', stars:5, date:'2 weeks ago', text:'These parallettes are exactly what I needed for home calisthenics. The wood quality is premium and the grip is comfortable.', photos:['images/parallettes_rv2.png'], verified:true },
+        { name:'Ankit V.', stars:4, date:'3 weeks ago', text:'Good product for the price. Handles push-ups and dips perfectly. Reduces wrist strain as claimed. Would recommend for beginners.', photos:['images/parallettes_rv3.png'], verified:true },
+        { name:'Dev R.', stars:5, date:'1 month ago', text:'Amazing quality! The eco-friendly wood feels premium. My wrists don\'t hurt at all compared to floor push-ups. Game changer!', photos:[], verified:true },
+        { name:'Yash T.', stars:4, date:'5 weeks ago', text:'Lightweight and easy to store. Non-slip base works well. Assembly was quick. Good product for home gym setup.', photos:[], verified:true },
+        { name:'Harsh M.', stars:5, date:'6 weeks ago', text:'Perfect for L-sit practice. The height is just right and wood quality is solid. Highly recommend for calisthenics beginners.', photos:[], verified:true }
+      ]
+    },
+    6: { // Worldfit Lifting Straps
+      rating: 4.7,
+      total: 214,
+      reviews: [
+        { name:'Amit S.', stars:5, date:'3 days ago', text:'Best lifting straps I\'ve used! Grip is excellent and the neoprene padding provides great wrist support. No grip fatigue on deadlifts now.', photos:['images/straps_rv1.png'], verified:true },
+        { name:'Rahul D.', stars:5, date:'1 week ago', text:'Quality is top notch for this price. The cotton build is sturdy and doesn\'t slip even on heavy pulls. Highly recommend!', photos:['images/straps_rv2.png'], verified:true },
+        { name:'Vikram N.', stars:5, date:'2 weeks ago', text:'I can finally focus on pulling without worrying about grip. These straps are solid and the velcro closure holds perfectly.', photos:['images/straps_rv3.png'], verified:true },
+        { name:'Suresh K.', stars:4, date:'3 weeks ago', text:'Good straps overall. The wrist padding is comfortable and the loop system is easy to use. Slight improvement in stitching quality would make it 5 stars.', photos:['images/straps_rv4.png'], verified:true },
+        { name:'Mohit P.', stars:5, date:'1 month ago', text:'Excellent product! Been using these for 3 months now and they\'re still in perfect condition. The grip just gets better with time.', photos:['images/straps_rv5.png'], verified:true },
+        { name:'Arjun T.', stars:5, date:'5 weeks ago', text:'Game changer for my pulling sessions. Deadlift PR went up because I\'m not limited by grip strength anymore. Worth every rupee!', photos:['images/straps_rv6.png'], verified:true },
+        { name:'Priya M.', stars:4, date:'6 weeks ago', text:'Works great for women too! Adjustable fit is comfortable on smaller wrists. Used it for lat pulldowns and rows. Very satisfied.', photos:[], verified:true }
+      ]
+    }
+  };
+
+  /* ── RENDER REVIEWS ── */
+  function renderReviews(productId) {
+    const data = ALL_REVIEWS[productId];
+    if (!data) return;
+
+    // Update overall rating
+    const bigRating = document.getElementById('reviewsBigRating');
+    const totalCount = document.getElementById('reviewsTotalCount');
+    if (bigRating) bigRating.textContent = data.rating;
+    if (totalCount) totalCount.textContent = data.total + ' verified reviews';
+
+    const grid = document.getElementById('reviewsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = data.reviews.map(r => {
+      const stars = '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+      const photosHtml = r.photos.length
+        ? `<div class="review-photos">${r.photos.map(ph =>
+            `<img src="${ph}" alt="Review photo" class="review-photo" onclick="openImgLightbox('${ph}')" loading="lazy">`
+          ).join('')}</div>`
+        : '';
+      return `<div class="review-card">
+        <div class="review-header">
+          <div class="review-avatar">${r.name[0]}</div>
+          <div class="review-meta">
+            <div class="review-name">${r.name}</div>
+            <div class="review-date">${r.date}</div>
+          </div>
+        </div>
+        <div class="review-stars">${stars}</div>
+        <div class="review-text">${r.text}</div>
+        ${photosHtml}
+        ${r.verified ? '<div class="review-verified">✓ Verified Purchase</div>' : ''}
+      </div>`;
+    }).join('');
+
+    // Fade in cards
+    setTimeout(() => grid.querySelectorAll('.review-card').forEach(c => c.style.opacity='1'), 100);
+  }
+
+  /* ── IMAGE LIGHTBOX ── */
+  let _lbImgs = [], _lbIdx = 0;
+  function openImgLightbox(directUrl){
+    if (directUrl) {
+      // Direct URL (from review photos) — show single image
+      _lbImgs = [directUrl]; _lbIdx = 0;
+      _lbRender();
+      document.getElementById('imgLightbox').classList.add('open');
+      document.body.style.overflow='hidden';
+      return;
+    }
+    const mainImg = document.getElementById('pdMainImg');
+    // Collect all current product images
+    const thumbs = document.querySelectorAll('.pd2-thumb img');
+    _lbImgs = thumbs.length ? Array.from(thumbs).map(t=>t.src) : [mainImg.src];
+    _lbIdx = _lbImgs.indexOf(mainImg.src);
+    if(_lbIdx<0) _lbIdx=0;
+    _lbRender();
+    document.getElementById('imgLightbox').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeImgLightbox(){
+    document.getElementById('imgLightbox').classList.remove('open');
+    document.body.style.overflow='';
+  }
+  function lightboxNav(dir){
+    _lbIdx = (_lbIdx + dir + _lbImgs.length) % _lbImgs.length;
+    _lbRender();
+  }
+  function _lbRender(){
+    document.getElementById('lightboxImg').src = _lbImgs[_lbIdx];
+  }
+  // Keyboard support
+  document.addEventListener('keydown', e=>{
+    const lb = document.getElementById('imgLightbox');
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') closeImgLightbox();
+    if(e.key==='ArrowLeft') lightboxNav(-1);
+    if(e.key==='ArrowRight') lightboxNav(1);
+  });
+
+</script>
+</body>
+</html>

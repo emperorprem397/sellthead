@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SELLTHEAD Checkout</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Montserrat', sans-serif; background: #050709; color: #eee; min-height: 100vh; padding-bottom: 40px; }
+  
+  /* NAVBAR */
+  #innerTopbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(5, 7, 9, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(232, 28, 28, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 100;
+  }
+  .navbar-logo { font-size: 1rem; font-weight: 900; letter-spacing: 2px; color: #fff; }
+  .navbar-logo span { color: #e81c1c; }
+  .navbar-links { display: flex; gap: 24px; align-items: center; font-size: 0.9rem; }
+  .navbar-links a { color: #eee; text-decoration: none; transition: color 0.2s; }
+  .navbar-links a:hover { color: #e81c1c; }
+  .navbar-icons { display: flex; gap: 16px; align-items: center; }
+  .login-btn, .cart-pill { background: none; border: none; color: #eee; cursor: pointer; font-size: 1rem; transition: color 0.2s; }
+  .login-btn:hover, .cart-pill:hover { color: #e81c1c; }
+  .cart-pill { background: rgba(232, 28, 28, 0.15); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+  /* MAIN CONTAINER */
+  .checkout-container { max-width: 720px; margin: 80px auto 40px; padding: 0 16px; }
+
+  /* STEPS */
+  .checkout-steps { display: flex; gap: 12px; margin-bottom: 32px; }
+  .step-dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #1a1a1f; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; }
+  .step-dot.active { border-color: #e81c1c; background: #e81c1c; color: #fff; }
+  .step-dot.done { background: #00cc88; border-color: #00cc88; color: #fff; }
+
+  /* SECTIONS */
+  .checkout-step { display: none; animation: fadeIn 0.3s; }
+  .checkout-step.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .section-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 24px; letter-spacing: 1px; }
+
+  /* ORDER SUMMARY */
+  .order-summary-box {
+    background: rgba(13, 13, 15, 0.6);
+    border: 1px solid rgba(232, 28, 28, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  .order-summary-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+  .checkout-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .checkout-item:last-child { border-bottom: none; }
+  .checkout-item-info { flex: 1; }
+  .checkout-item-name { font-weight: 600; margin-bottom: 4px; }
+  .checkout-item-meta { font-size: 0.8rem; color: #666; }
+  .checkout-item-price { font-weight: 700; color: #e81c1c; font-size: 1rem; }
+
+  /* PRICE BREAKDOWN */
+  .price-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.95rem; }
+  .price-row.total { border-bottom: none; border-top: 2px solid #e81c1c; padding-top: 14px; margin-top: 4px; font-weight: 900; font-size: 1.15rem; color: #fff; }
+  .price-row.discount { color: #00cc88; }
+  .price-row .key { color: #888; }
+  .price-row .val { text-align: right; font-weight: 600; }
+
+  /* DISCOUNT CODE */
+  .discount-section {
+    background: rgba(13, 13, 15, 0.6);
+    border: 1px solid rgba(232, 28, 28, 0.15);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+  }
+  .discount-input-group { display: flex; gap: 10px; margin-bottom: 12px; }
+  #discountCodeInput { flex: 1; background: #111; border: 1px solid #222; color: #eee; padding: 10px 14px; border-radius: 7px; font-size: 0.9rem; font-family: inherit; }
+  #discountCodeInput:focus { outline: none; border-color: #e81c1c; }
+  #applyDiscountBtn { background: #e81c1c; color: #fff; border: none; padding: 10px 18px; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
+  #applyDiscountBtn:hover { background: #cc1818; }
+  #discountMsg { font-size: 0.85rem; margin-top: 8px; }
+
+  /* FORM FIELDS */
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
+  .form-group input, .form-group select { width: 100%; background: #111; border: 1px solid #222; color: #eee; padding: 12px 14px; border-radius: 8px; font-size: 0.95rem; font-family: inherit; }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: #e81c1c; }
+  .form-group input::placeholder { color: #555; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* BUTTONS */
+  .button-group { display: flex; gap: 12px; margin-top: 28px; }
+  .btn { padding: 14px 28px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
+  .btn-primary { background: #e81c1c; color: #fff; flex: 1; }
+  .btn-primary:hover { background: #cc1818; }
+  .btn-secondary { background: #1a1a1f; color: #888; border: 1px solid #333; }
+  .btn-secondary:hover { color: #eee; border-color: #e81c1c; }
+
+  /* PAYMENT */
+  .payment-option { background: #111; border: 2px solid #222; border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s; }
+  .payment-option.selected { border-color: #e81c1c; background: rgba(232, 28, 28, 0.1); }
+  .payment-option h4 { font-size: 1rem; margin-bottom: 4px; }
+  .payment-option p { font-size: 0.85rem; color: #666; }
+
+  /* SUCCESS */
+  #orderSuccess { display: none; text-align: center; padding: 40px 20px; }
+  #orderSuccess h2 { font-size: 1.6rem; color: #00cc88; margin-bottom: 16px; }
+  #orderSuccess p { color: #888; margin-bottom: 8px; }
+  .success-order-id { font-family: monospace; font-size: 0.9rem; color: #eee; background: #111; padding: 10px; border-radius: 7px; margin: 20px 0; }
+  .success-btn-group { display: flex; gap: 12px; margin-top: 28px; justify-content: center; }
+
+  /* UPI FALLBACK */
+  #upiFailback { display: none; background: rgba(232, 28, 28, 0.15); border: 1px solid #e81c1c; border-radius: 10px; padding: 16px; margin-top: 16px; }
+  #upiFailback h4 { color: #e81c1c; margin-bottom: 10px; }
+  #upiFailback p { font-size: 0.85rem; color: #888; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div id="innerTopbar">
+  <div class="navbar-logo">SELLT<span>HEAD</span></div>
+  <div class="navbar-links">
+    <a href="index.html">HOME</a>
+    <a href="shop.html">SHOP</a>
+    <a href="index.html#collabs">COLLABS</a>
+    <a href="myorders.html">ORDERS</a>
+  </div>
+  <div class="navbar-icons">
+    <button class="login-btn" onclick="window.location.href='account.html'">👤</button>
+    <button class="cart-pill" onclick="window.location.href='checkout.html'">CART <span id="cartCount">0</span></button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="checkout-container">
+  <!-- STEP INDICATORS -->
+  <div class="checkout-steps">
+    <div class="step-dot active" onclick="goToStep(1)">1</div>
+    <div class="step-dot" onclick="goToStep(2)">2</div>
+    <div class="step-dot" onclick="goToStep(3)">3</div>
+  </div>
+
+  <!-- STEP 1: DISCOUNT + ITEMS -->
+  <div class="checkout-step active" id="step1">
+    <div class="section-title">Order Details</div>
+
+    <!-- DISCOUNT CODE -->
+    <div class="discount-section">
+      <h3 style="font-size: 0.95rem; margin-bottom: 12px;">Apply Discount Code</h3>
+      <div class="discount-input-group">
+        <input type="text" id="discountCodeInput" placeholder="Enter code (e.g. PRATIK10)" />
+        <button id="applyDiscountBtn">Apply</button>
+      </div>
+      <div id="discountMsg"></div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary-box">
+      <h3>ORDER SUMMARY</h3>
+      <div id="checkoutItemsList">
+        <!-- Items rendered here -->
+      </div>
+
+      <div style="margin-top: 16px;">
+        <div class="price-row">
+          <span class="key">Subtotal</span>
+          <span class="val" id="checkoutSubtotal">₹0</span>
+        </div>
+        <div class="price-row discount" id="discountRow" style="display: none;">
+          <span class="key">Discount</span>
+          <span class="val" id="checkoutDiscount">−₹0</span>
+        </div>
+        <div class="price-row">
+          <span class="key">Shipping</span>
+          <span class="val">FREE</span>
+        </div>
+        <div class="price-row total">
+          <span class="key">TOTAL</span>
+          <span class="val" id="checkoutTotal">₹0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" data-next-step="2">Continue to Delivery</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: DELIVERY DETAILS -->
+  <div class="checkout-step" id="step2">
+    <div class="section-title">Delivery Details</div>
+
+    <div class="form-group">
+      <label>Name *</label>
+      <input type="text" id="custName" placeholder="Full Name" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="custEmail" placeholder="your@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Phone *</label>
+        <input type="tel" id="custPhone" placeholder="10-digit mobile number" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Address *</label>
+      <input type="text" id="custAddress" placeholder="Street address" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>City *</label>
+        <input type="text" id="custCity" placeholder="City" />
+      </div>
+      <div class="form-group">
+        <label>PIN Code *</label>
+        <input type="text" id="custPincode" placeholder="6-digit PIN" />
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-secondary" data-back-step="1">Back</button>
+      <button class="btn btn-primary" data-next-step="3">Continue to Payment</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: PAYMENT -->
+  <div class="checkout-step" id="step3">
+    <div class="section-title">Payment</div>
+
+    <!-- AMOUNT TO PAY -->
+    <div class="order-summary-box" style="text-align:center;">
+      <h3 style="margin-bottom:8px;">Amount to Pay</h3>
+      <div style="font-size: 2.2rem; font-weight: 900; color: #e81c1c; margin: 12px 0;">
+        <span id="payTotal">₹0</span>
+      </div>
+      <p style="font-size: 0.8rem; color: #666;">Click below — PhonePe / GPay / Paytm will open with amount pre-filled</p>
+    </div>
+
+    <!-- UPI BUTTON + PER-APP BUTTONS -->
+    <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px; font-size:1rem;" onclick="openUPI()">
+      💳 PAY NOW VIA UPI
+    </button>
+    <div style="display:flex; gap:8px; margin-bottom:16px; justify-content:center; flex-wrap:wrap;">
+      <button onclick="openPhonePe()" style="background:rgba(90,0,161,0.15);border:1px solid rgba(90,0,161,0.5);color:#c084fc;padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">📲 PhonePe</button>
+      <button onclick="openGPay()" style="background:rgba(66,133,244,0.15);border:1px solid rgba(66,133,244,0.5);color:#93c5fd;padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">💙 GPay</button>
+      <button onclick="openPaytm()" style="background:rgba(0,186,214,0.15);border:1px solid rgba(0,186,214,0.5);color:#67e8f9;padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">💠 Paytm</button>
+    </div>
+
+    <!-- QR CODE -->
+    <p style="text-align:center; color:#666; font-size:0.82rem; margin:8px 0;">— OR scan QR code —</p>
+    <div style="text-align:center; background:rgba(13,13,15,0.6); border:1px solid rgba(232,28,28,0.15); border-radius:12px; padding:20px; margin-bottom:16px;">
+      <img src="images/phonepe_qr.png" alt="Scan to Pay — SELLTHEAD"
+        style="max-width:220px; width:100%; border-radius:10px;"
+        onerror="this.src='images/phonepe_qr.jpg'" />
+      <p style="margin-top:10px; font-size:0.8rem; color:#888;">UPI ID: <strong style="color:#e81c1c;">7568521210-fb34-2@ybl</strong></p>
+      <p style="font-size:0.75rem; color:#666;">PhonePe · GPay · Paytm · Any UPI app</p>
+    </div>
+
+    <!-- UPI FALLBACK -->
+    <div id="upiFailback" style="display:none; background:rgba(232,28,28,0.12); border:1px solid #e81c1c; border-radius:10px; padding:14px; margin-bottom:16px;">
+      <h4 style="color:#e81c1c; margin-bottom:8px;">UPI app not detected?</h4>
+      <p style="font-size:0.82rem; color:#888; margin-bottom:6px;">Pay manually to:</p>
+      <strong style="color:#e81c1c; font-size:1.1rem;">7568521210-fb34-2@ybl</strong>
+      <p style="font-size:0.75rem; color:#666; margin-top:6px;">Amount: ₹<span id="fallbackAmount">0</span> — take a screenshot after paying</p>
+    </div>
+
+    <!-- CONFIRM AFTER PAYMENT -->
+    <div style="background: rgba(0, 204, 136, 0.1); border: 1px solid #00cc88; border-radius: 10px; padding: 16px; margin-top: 8px; text-align: center;">
+      <p style="font-size: 0.9rem; margin-bottom: 12px; color:#ccc;">✓ Payment sent? Confirm your order below:</p>
+      <button class="btn btn-primary" onclick="confirmOrder()" style="width:100%;">I'VE PAID — CONFIRM ORDER ✅</button>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div id="orderSuccess" style="display:none; text-align:center; padding:40px 20px;">
+      <h2 style="font-size:1.6rem; color:#00cc88; margin-bottom:16px;">✓ Order Placed!</h2>
+      <p style="color:#888; margin-bottom:8px;">Thank you for your order</p>
+      <div style="font-family:monospace; font-size:0.9rem; color:#eee; background:#111; padding:10px; border-radius:7px; margin:20px 0;">
+        Order ID: <span id="successOrderId">-</span>
+      </div>
+      <p>Amount Paid: <strong style="color:#e81c1c;"><span id="successTotal">₹0</span></strong></p>
+      <p style="font-size:0.8rem; color:#666; margin-top:12px;">Confirmation sent to your WhatsApp.</p>
+      <div style="display:flex; gap:12px; margin-top:28px; justify-content:center;">
+        <button class="btn btn-primary" onclick="window.location.href='myorders.html'">Track Order</button>
+        <button class="btn btn-secondary" onclick="window.location.href='shop.html'">Continue Shopping</button>
+      </div>
+    </div>
+
+    <div class="button-group" id="paymentBtns" style="margin-top:16px;">
+      <button class="btn btn-secondary" data-back-step="2">← Back</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/checkout.js"></script>
+<script>
+// Per-app UPI direct openers
+function _buildUpiParams(){
+  const total = window._lastUpiTotal || orderData && orderData.total || 0;
+  return 'pa='+encodeURIComponent('7568521210-fb34-2@ybl')+'&pn='+encodeURIComponent('SELLTHEAD')+'&am='+total+'&cu=INR&tn='+encodeURIComponent('SELLTHEAD Order');
+}
+function openPhonePe(){
+  window.location.href='phonepe://pay?'+_buildUpiParams();
+  setTimeout(()=>{ const fb=document.getElementById('upiFailback'); if(fb)fb.style.display='block'; },3000);
+}
+function openGPay(){
+  window.location.href='tez://upi/pay?'+_buildUpiParams();
+  setTimeout(()=>{ const fb=document.getElementById('upiFailback'); if(fb)fb.style.display='block'; },3000);
+}
+function openPaytm(){
+  window.location.href='paytmmp://pay?'+_buildUpiParams();
+  setTimeout(()=>{ const fb=document.getElementById('upiFailback'); if(fb)fb.style.display='block'; },3000);
+}
+</script>
+</body>
+</html>

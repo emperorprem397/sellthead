@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SELLTHEAD — Gear Up. Stand Out.</title>
+  <meta name="description" content="Premium anime & streetwear T-shirts. Gym compression tees, oversized graphic tees. SELLTHEAD — Gear Up. Stand Out." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursorDot"></div>
+<div id="cursorRing"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo_icon.png" alt="S" class="nav-logo-svg" onerror="this.style.display='none'" />
+      <span class="logo-text">SELLTHEAD</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link active">SHOP</a></li>
+      <li><a href="index.html#collabs" class="nav-link">COLLABORATORS</a></li>
+      <li><a href="index.html#about" class="nav-link">STORY</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" id="loginBtn" title="Login / Register">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button class="cart-pill" id="cartBtn" title="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-pill-label">CART (<span id="cartCount">0</span>)</span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- DRAWER -->
+<div class="drawer-bg" id="drawerBg"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" id="drawerClose">✕</button>
+  <a href="index.html" class="drawer-link">HOME</a>
+  <a href="shop.html" class="drawer-link">SHOP</a>
+  <a href="account.html" class="drawer-link">MY ACCOUNT</a>
+  <a href="index.html#about" class="drawer-link">ABOUT US</a>
+  <br/>
+  <button class="btn-red btn-sm" id="drawerLoginBtn" style="margin-top:1rem;width:100%">LOGIN / REGISTER</button>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-bg" id="cartBg"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-sidebar-header">
+    <h3>YOUR CART</h3>
+    <button id="closeCart">✕</button>
+  </div>
+  <div class="cart-sidebar-items" id="cartItems"></div>
+  <div class="cart-sidebar-footer">
+    <div class="cart-total">
+      <span>TOTAL</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+    <a href="checkout.html" class="btn-red full-btn">CHECKOUT →</a>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeLoginModal">✕</button>
+    <div id="loginFormWrap">
+      <h2>WELCOME BACK</h2>
+      <input class="form-input" id="loginEmail" type="email" placeholder="Email address" />
+      <input class="form-input" id="loginPassword" type="password" placeholder="Password" />
+      <button class="btn-red full-btn" id="doLogin">LOGIN</button>
+      <div class="auth-divider"><span>OR</span></div>
+      <button class="btn-google full-btn" id="doGoogleLogin">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        CONTINUE WITH GOOGLE
+      </button>
+      <p class="switch-form">New here? <a href="#" id="goRegister">Create account</a> · <a href="#" id="goForgot" style="color:var(--white2)">Forgot password?</a></p>
+    </div>
+    <div id="registerFormWrap" style="display:none">
+      <h2>CREATE ACCOUNT</h2>
+      <input class="form-input" id="regName" type="text" placeholder="Full name" />
+      <input class="form-input" id="regEmail" type="email" placeholder="Email address" />
+      <input class="form-input" id="regPassword" type="password" placeholder="Password (min 6 chars)" />
+      <button class="btn-red full-btn" id="doRegister">CREATE ACCOUNT</button>
+      <div class="auth-divider"><span>OR</span></div>
+      <button class="btn-google full-btn" id="doGoogleRegister">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        SIGN UP WITH GOOGLE
+      </button>
+      <p class="switch-form">Already have an account? <a href="#" id="goLogin">Login</a></p>
+    </div>
+    <div id="forgotFormWrap" style="display:none">
+      <h2>RESET PASSWORD</h2>
+      <input class="form-input" id="forgotEmail" type="email" placeholder="Your email address" />
+      <button class="btn-red full-btn" id="doForgot">SEND RESET LINK</button>
+      <p class="switch-form"><a href="#" id="goLoginFromForgot">← Back to login</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero tech-grid-bg" id="home">
+  <div class="hero-glow-a" aria-hidden="true"></div>
+  <div class="hero-glow-b" aria-hidden="true"></div>
+  <img src="images/hero_bg.png" alt="SELLTHEAD Hero" class="hero-full-img" onerror="this.style.display='none'" />
+  <div class="hero-overlay-left"></div>
+  <div class="hero-overlay-bottom"></div>
+  </div>
+
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FEATURED PRODUCTS -->
+<section class="products-section section">
+  <div class="section-header">
+    <div class="section-label">— HOT DROPS —</div>
+    <h2 class="section-title">FEATURED <span class="accent">PRODUCTS</span></h2>
+    <p class="section-desc">Premium quality gear built for dominance.</p>
+  </div>
+  <div class="products-grid" id="featuredGrid"></div>
+  <div class="center-btn" style="text-align:center;margin-top:2.5rem">
+    <a href="shop.html" class="btn-outline">VIEW ALL PRODUCTS →</a>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- COLLABORATORS -->
+<section class="collabs-section section" id="collabs">
+  <div class="section-header">
+    <div class="section-label">— COMMUNITY —</div>
+    <h2 class="section-title">OUR <span class="accent">COLLABORATORS</span></h2>
+    <p class="section-desc">The faces behind the movement.</p>
+  </div>
+  <div class="collabs-grid">
+    <div class="collab-card fade-in">
+      <div class="collab-img-wrap">
+        <img src="images/collab_pratik.png" alt="Pratik" onerror="this.style.background='#0d1520'" />
+        <div class="collab-overlay">
+          <a href="https://www.instagram.com/pratik_fitness" target="_blank" class="collab-insta-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @pratik_fitness
+          </a>
+        </div>
+      </div>
+      <div class="collab-info">
+        <h3>PRATIK</h3>
+        <p class="collab-ig">@pratik_fitness</p>
+        <div class="collab-code">CODE: <span>PRATIK10</span></div>
+      </div>
+    </div>
+    <div class="collab-card fade-in">
+      <div class="collab-img-wrap">
+        <img src="images/collab_priyansh.png" alt="Priyansh" onerror="this.style.background='#0d1520'" />
+        <div class="collab-overlay">
+          <a href="https://www.instagram.com/priyansh_lifts" target="_blank" class="collab-insta-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @priyansh_lifts
+          </a>
+        </div>
+      </div>
+      <div class="collab-info">
+        <h3>PRIYANSH</h3>
+        <p class="collab-ig">@priyansh_lifts</p>
+        <div class="collab-code">CODE: <span>PRIYANSH10</span></div>
+      </div>
+    </div>
+    <div class="collab-card fade-in">
+      <div class="collab-img-wrap">
+        <img src="images/collab_dishant.png" alt="Dishant" onerror="this.style.background='#0d1520'" />
+        <div class="collab-overlay">
+          <a href="https://www.instagram.com/dishant_alpha" target="_blank" class="collab-insta-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @dishant_alpha
+          </a>
+        </div>
+      </div>
+      <div class="collab-info">
+        <h3>DISHANT</h3>
+        <p class="collab-ig">@dishant_alpha</p>
+        <div class="collab-code">CODE: <span>DISHANT10</span></div>
+      </div>
+    </div>
+    <div class="collab-card fade-in">
+      <div class="collab-img-wrap">
+        <img src="images/collab_saurabh.png" alt="Saurabh" onerror="this.style.background='#0d1520'" />
+        <div class="collab-overlay">
+          <a href="https://www.instagram.com/saurabh.xesthetics" target="_blank" class="collab-insta-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @saurabh.xesthetics
+          </a>
+        </div>
+      </div>
+      <div class="collab-info">
+        <h3>SAURABH</h3>
+        <p class="collab-ig">@saurabh.xesthetics</p>
+        <div class="collab-code">CODE: <span>SAURABH10</span></div>
+      </div>
+    </div>
+    <div class="collab-card fade-in">
+      <div class="collab-img-wrap">
+        <img src="images/collab_prince.png" alt="Prince" onerror="this.style.background='#0d1520'" />
+        <div class="collab-overlay">
+          <a href="https://www.instagram.com/princekarmore.fit" target="_blank" class="collab-insta-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @princekarmore.fit
+          </a>
+        </div>
+      </div>
+      <div class="collab-info">
+        <h3>PRINCE</h3>
+        <p class="collab-ig">@princekarmore.fit</p>
+        <div class="collab-code">CODE: <span>PRINCE10</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT / FOUNDER -->
+<section class="about-section section" id="about">
+  <div class="about-inner">
+    <div class="about-img-wrap fade-in">
+      <div class="about-img-glow"></div>
+      <div class="about-img-frame">
+        <img src="images/owner_prem.png" alt="Prem Vijay Kadam" class="about-img" onerror="this.style.minHeight='400px';this.style.background='#0d1520'" />
+      </div>
+    </div>
+    <div class="about-content fade-in">
+      <div class="about-eyebrow">
+        <span class="about-eyebrow-line"></span>
+        <span class="about-eyebrow-text">BEHIND THE BRAND</span>
+      </div>
+      <h2 class="about-title">MISSION: <span class="accent">DOMINANCE.</span></h2>
+      <blockquote class="about-quote">
+        "SELLTHEAD was started with one mission — bring premium anime and streetwear tees directly to you, without the inflated prices. Every drop is handpicked. Every piece is built to dominate."
+      </blockquote>
+      <p class="about-text">
+        Prem Vijay Kadam founded SELLTHEAD to bridge the gap between technical athletic wear and high-street aesthetics. We believe your gear should be as intense as your training session.
+      </p>
+      <div class="about-btns">
+        <a href="shop.html" class="btn-primary">Shop Now</a>
+        <a href="https://wa.me/917568521210" class="btn-secondary" target="_blank">Connect</a>
+      </div>
+    </div>
+  </div>
+  <div class="visiting-card-wrap fade-in">
+    <img src="images/visiting_card.png" alt="SELLTHEAD Visiting Card" class="visiting-card-img" onerror="this.style.display='none'" />
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- POLICIES -->
+<section class="terms-section section" id="terms">
+  <div class="section-header">
+    <div class="section-label">— POLICIES —</div>
+    <h2 class="section-title">HOW WE <span class="accent">WORK</span></h2>
+  </div>
+  <div class="terms-grid">
+    <div class="term-block fade-in">
+      <h4>📦 DELIVERY</h4>
+      <p>Orders dispatched within 2–3 business days. Delivery across India in 5–7 working days. Free shipping on all orders, no minimum.</p>
+    </div>
+    <div class="term-block fade-in">
+      <h4>💰 PAYMENT</h4>
+      <p>We accept UPI / PhonePe payments. Pay securely after placing your order. Screenshot confirmation sent to your WhatsApp.</p>
+    </div>
+    <div class="term-block fade-in">
+      <h4>🔄 RETURNS</h4>
+      <p>7-day return policy on defective or wrong items. Contact us on WhatsApp with your order ID and photos for a quick resolution.</p>
+    </div>
+    <div class="term-block fade-in">
+      <h4>🎟️ DISCOUNTS</h4>
+      <p>Use collaborator codes at checkout for 10% OFF. Codes are single-use per customer. Cannot be combined with other offers.</p>
+    </div>
+    <div class="term-block fade-in">
+      <h4>📱 ORDER TRACKING</h4>
+      <p>All order updates are shared via WhatsApp. You'll receive confirmation, dispatch, and delivery notifications directly.</p>
+    </div>
+    <div class="term-block fade-in">
+      <h4>🛡️ QUALITY</h4>
+      <p>Every product is quality checked before dispatch. We use premium cotton and performance fabrics. Built different, built to last.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo-text">SELLTHEAD</div>
+      <p>Premium anime &amp; streetwear tees built for those who train hard and stand out. Gear Up. Stand Out.</p>
+      <div class="footer-social">
+        <a href="https://wa.me/917568521210" target="_blank" title="WhatsApp">💬</a>
+        <a href="#" title="Instagram">📸</a>
+      </div>
+    </div>
+    <div>
+      <h5>QUICK LINKS</h5>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="myorders.html">My Orders</a>
+        <a href="account.html">My Account</a>
+      </div>
+    </div>
+
+    <div class="footer-contact">
+      <h5>CONTACT</h5>
+      <p>📱 <a href="https://wa.me/917568521210">+91 75685 21210</a></p>
+      <p>📧 <a href="mailto:kadampremvijay11@gmail.com">kadampremvijay11@gmail.com</a></p>
+      <p style="margin-top:.8rem;font-size:.76rem;color:var(--grey)">Mon–Sat · 10am–8pm IST</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 SELLTHEAD. All rights reserved. · <a href="#">Privacy Policy</a></p>
+    <p style="font-size:.72rem;color:rgba(255,255,255,.3);margin-top:.4rem;letter-spacing:.02em;">Connecting customers with quality products from trusted suppliers.</p>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/917568521210" class="wa-float" target="_blank" title="Chat on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

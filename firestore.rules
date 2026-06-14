@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── USERS COLLECTION ───
+    match /users/{userId} {
+      // User can read/write their own document
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Admin can read AND list all users
+      allow read, list: if request.auth != null && isAdmin();
+    }
+
+    // ─── ORDERS COLLECTION ───
+    match /orders/{orderId} {
+      // User can create orders (must be logged in or guest)
+      allow create: if true;
+      // User can read ONLY their own orders
+      allow read: if request.auth != null &&
+                     resource.data.userId == request.auth.uid;
+      // Admin can read all orders and update status
+      allow read, update: if request.auth != null && isAdmin();
+    }
+
+    // ─── DISCOUNT USAGE ───
+    match /discountUsage/{userId} {
+      // User can read/write their own discount usage
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Admin can read all
+      allow read: if request.auth != null && isAdmin();
+    }
+
+    // ─── DISCOUNT CODES (read-only for users) ───
+    match /discountCodes/{code} {
+      allow read: if true;
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // ─── PRODUCTS (public read, admin write) ───
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // ─── CARTS COLLECTION (cross-device sync) ───
+    match /carts/{userId} {
+      // Only the logged-in user can read/write their own cart
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ─── HELPER: IS ADMIN ───
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+  }
+}

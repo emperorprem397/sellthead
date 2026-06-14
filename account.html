@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account — SELLTHEAD</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body class="inner-page">
+<!-- INNER PAGE TOPBAR (fixed, simple) -->
+<div id="innerTopbar">
+  <div class="inner-topbar-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo_icon.png" alt="S" class="nav-logo-svg" onerror="this.style.display='none'" />
+      <span class="logo-text">SELLTHEAD</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:1.2rem">
+      <a href="shop.html" style="font-family:var(--font-montserrat);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white2);transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--white2)'">SHOP</a>
+      <a href="index.html#collabs" style="font-family:var(--font-montserrat);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white2);transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--white2)'">COLLABS</a>
+      <a href="myorders.html" style="font-family:var(--font-montserrat);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white2);transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--white2)'">ORDERS</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <button class="nav-icon" id="loginBtn" title="Login / Register">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button class="cart-pill" id="cartBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-pill-label">CART (<span id="cartCount">0</span>)</span>
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<div id="cursorRing"></div>
+
+<div class="cart-bg" id="cartBg"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-sidebar-header"><h3>YOUR CART</h3><button id="closeCart">✕</button></div>
+  <div class="cart-sidebar-items" id="cartItems"></div>
+  <div class="cart-sidebar-footer">
+    <div class="cart-total"><span>TOTAL</span><span id="cartTotal">&#8377;0</span></div>
+    <a href="checkout.html" class="btn-red full-btn">CHECKOUT &#8594;</a>
+  </div>
+</div>
+
+<div class="modal-bg" id="loginModal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeLoginModal">&#10005;</button>
+    <div id="loginFormWrap">
+      <h2>WELCOME BACK</h2>
+      <input class="form-input" id="loginEmail" type="email" placeholder="Email address" />
+      <input class="form-input" id="loginPassword" type="password" placeholder="Password" />
+      <button class="btn-red full-btn" id="doLogin">LOGIN</button>
+      <div class="auth-divider"><span>OR</span></div>
+      <button class="btn-google full-btn" id="doGoogleLogin">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        CONTINUE WITH GOOGLE
+      </button>
+      <p class="switch-form">New here? <a href="#" id="goRegister">Create account</a> &middot; <a href="#" id="goForgot" style="color:var(--white2)">Forgot?</a></p>
+    </div>
+    <div id="registerFormWrap" style="display:none">
+      <h2>CREATE ACCOUNT</h2>
+      <input class="form-input" id="regName" type="text" placeholder="Full name" />
+      <input class="form-input" id="regEmail" type="email" placeholder="Email address" />
+      <input class="form-input" id="regPassword" type="password" placeholder="Password" />
+      <button class="btn-red full-btn" id="doRegister">CREATE ACCOUNT</button>
+      <div class="auth-divider"><span>OR</span></div>
+      <button class="btn-google full-btn" id="doGoogleRegister">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        SIGN UP WITH GOOGLE
+      </button>
+      <p class="switch-form"><a href="#" id="goLogin">Already have an account? Login</a></p>
+    </div>
+    <div id="forgotFormWrap" style="display:none">
+      <h2>RESET PASSWORD</h2>
+      <input class="form-input" id="forgotEmail" type="email" placeholder="Your email" />
+      <button class="btn-red full-btn" id="doForgot">SEND RESET LINK</button>
+      <p class="switch-form"><a href="#" id="goLoginFromForgot">&#8592; Back to login</a></p>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- NOT LOGGED IN STATE -->
+<div id="accountNotLoggedIn" style="display:none;padding:8rem 2rem 4rem;text-align:center;max-width:500px;margin:0 auto">
+  <div style="font-size:3.5rem;margin-bottom:1rem">👤</div>
+  <h2 style="font-family:var(--font-display);font-size:2rem;letter-spacing:3px;margin-bottom:.6rem">MY ACCOUNT</h2>
+  <p style="color:var(--white2);margin-bottom:1.5rem">Login to view your profile, orders, and manage your account.</p>
+  <button class="btn-red" id="acctLoginBtn">LOGIN / REGISTER</button>
+</div>
+
+<!-- LOGGED IN STATE -->
+<div class="account-page" id="accountLoggedIn" style="display:none">
+  <div class="account-header">
+    <div class="account-avatar-wrap" id="avatarWrap" title="Click to change profile picture">
+      <div class="account-avatar" id="accountAvatar">P</div>
+      <div class="avatar-edit-overlay">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        EDIT
+      </div>
+    </div>
+    <input type="file" id="avatarFileInput" accept="image/*" style="display:none" />
+    <div>
+      <div class="account-name" id="accountName">Loading...</div>
+      <div class="account-email" id="accountEmail"></div>
+      <button class="avatar-url-btn" id="avatarUrlBtn">🔗 Use Image URL</button>
+    </div>
+    <button class="btn-outline btn-sm" id="logoutBtn" style="margin-left:auto">LOGOUT</button>
+  </div>
+
+  <div class="account-tabs">
+    <button class="account-tab active" data-tab="profile">PROFILE</button>
+    <button class="account-tab" data-tab="orders">MY ORDERS</button>
+    <button class="account-tab" data-tab="security">SECURITY</button>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div class="account-panel active" id="tab-profile">
+    <div class="account-card">
+      <h3>PERSONAL INFORMATION</h3>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" id="profName" type="text" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="profEmail" type="email" disabled style="opacity:.6;cursor:not-allowed" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" id="profPhone" type="tel" placeholder="10-digit number" />
+      </div>
+      <button class="btn-red" id="saveProfile" style="margin-top:.5rem">SAVE CHANGES</button>
+    </div>
+  </div>
+
+  <!-- ORDERS TAB -->
+  <div class="account-panel" id="tab-orders">
+    <div id="acctOrdersList">
+      <div class="orders-loading">Loading your orders...</div>
+    </div>
+    <div style="text-align:center;margin-top:1.5rem">
+      <a href="myorders.html" class="btn-outline btn-sm">VIEW ALL ORDERS →</a>
+    </div>
+  </div>
+
+  <!-- SECURITY TAB -->
+  <div class="account-panel" id="tab-security">
+    <div class="account-card">
+      <h3>CHANGE PASSWORD</h3>
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input class="form-input" id="newPassword" type="password" placeholder="Min 6 characters" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm New Password</label>
+        <input class="form-input" id="confirmPassword" type="password" placeholder="Repeat new password" />
+      </div>
+      <button class="btn-red" id="changePassBtn">UPDATE PASSWORD</button>
+    </div>
+    <div class="account-card" style="margin-top:1rem">
+      <h3>DANGER ZONE</h3>
+      <p style="color:var(--white2);font-size:.85rem;margin-bottom:1rem">Need help or want to delete your account? Contact us on WhatsApp.</p>
+      <a href="https://wa.me/917568521210" class="btn-outline btn-sm" target="_blank">CONTACT SUPPORT</a>
+    </div>
+  </div>
+</div>
+
+<a href="https://wa.me/917568521210" class="wa-float" target="_blank">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/orders.js"></script>
+<script>
+// ── INSTANT LOGIN FLASH FIX ──
+// Check localStorage cache IMMEDIATELY — before Firebase loads
+// This prevents the "logged-out flash" on account page
+(function() {
+  const cached = localStorage.getItem('sh_user_cache');
+  const loggedIn  = document.getElementById('accountLoggedIn');
+  const loggedOut = document.getElementById('accountNotLoggedIn');
+  if (cached && loggedIn && loggedOut) {
+    // User was logged in last time — show logged-in state instantly
+    loggedIn.style.display  = 'block';
+    loggedOut.style.display = 'none';
+    // Also restore avatar from cache instantly
+    const data = JSON.parse(cached);
+    const avatarUrl = data.photoURL || (data.uid && localStorage.getItem('sh_avatar_' + data.uid));
+    if (avatarUrl) {
+      const avatarEl = document.getElementById('accountAvatar');
+      if (avatarEl) {
+        avatarEl.style.backgroundImage = `url(${avatarUrl})`;
+        avatarEl.style.backgroundSize = 'cover';
+        avatarEl.style.backgroundPosition = 'center';
+        avatarEl.textContent = '';
+      }
+    }
+    if (data.name) {
+      const nameEl = document.getElementById('accountName');
+      if (nameEl) nameEl.textContent = data.name;
+    }
+  }
+})();
+
+// Account page logic
+document.addEventListener('authStateChanged', async e => {
+  const user = e.detail.user;
+  const loggedIn  = document.getElementById('accountLoggedIn');
+  const loggedOut = document.getElementById('accountNotLoggedIn');
+  if (!user) {
+    loggedIn.style.display  = 'none';
+    loggedOut.style.display = 'block';
+    return;
+  }
+  loggedOut.style.display = 'none';
+  loggedIn.style.display  = 'block';
+  const name  = Auth.userDoc?.name || user.displayName || 'User';
+  const email = user.email || '';
+  document.getElementById('accountName').textContent   = name;
+  document.getElementById('accountEmail').textContent  = email;
+  document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('profName').value  = name;
+  document.getElementById('profEmail').value = email;
+  document.getElementById('profPhone').value = Auth.userDoc?.phone || '';
+  loadAccountOrders();
+});
+
+document.getElementById('acctLoginBtn')?.addEventListener('click', () => document.getElementById('loginModal')?.classList.add('open'));
+document.getElementById('logoutBtn')?.addEventListener('click', () => Auth.logout().then(() => { window.location.reload(); }));
+
+// Modal open/close
+document.getElementById('closeLoginModal')?.addEventListener('click', () => document.getElementById('loginModal')?.classList.remove('open'));
+document.getElementById('loginModal')?.addEventListener('click', (e) => { if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+// Form switching
+document.getElementById('goRegister')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('loginFormWrap').style.display='none'; document.getElementById('registerFormWrap').style.display=''; document.getElementById('forgotFormWrap').style.display='none'; });
+document.getElementById('goLogin')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('loginFormWrap').style.display=''; document.getElementById('registerFormWrap').style.display='none'; document.getElementById('forgotFormWrap').style.display='none'; });
+document.getElementById('goForgot')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('loginFormWrap').style.display='none'; document.getElementById('registerFormWrap').style.display='none'; document.getElementById('forgotFormWrap').style.display=''; });
+document.getElementById('goLoginFromForgot')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('loginFormWrap').style.display=''; document.getElementById('registerFormWrap').style.display='none'; document.getElementById('forgotFormWrap').style.display='none'; });
+
+// Email login
+document.getElementById('doLogin')?.addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail')?.value.trim();
+  const pass  = document.getElementById('loginPassword')?.value;
+  if (!email || !pass) return;
+  const btn = document.getElementById('doLogin');
+  btn.textContent = 'LOGGING IN...'; btn.disabled = true;
+  const res = await Auth.login(email, pass);
+  if (res.ok) { document.getElementById('loginModal')?.classList.remove('open'); window.location.reload(); }
+  else { alert(res.error || 'Login failed'); btn.textContent = 'LOGIN'; btn.disabled = false; }
+});
+
+// Email register
+document.getElementById('doRegister')?.addEventListener('click', async () => {
+  const name  = document.getElementById('regName')?.value.trim();
+  const email = document.getElementById('regEmail')?.value.trim();
+  const pass  = document.getElementById('regPassword')?.value;
+  if (!name || !email || !pass) return;
+  const btn = document.getElementById('doRegister');
+  btn.textContent = 'CREATING...'; btn.disabled = true;
+  const res = await Auth.register(name, email, pass);
+  if (res.ok) { document.getElementById('loginModal')?.classList.remove('open'); window.location.reload(); }
+  else { alert(res.error || 'Registration failed'); btn.textContent = 'CREATE ACCOUNT'; btn.disabled = false; }
+});
+
+// Forgot password
+document.getElementById('doForgot')?.addEventListener('click', async () => {
+  const email = document.getElementById('forgotEmail')?.value.trim();
+  if (!email) return;
+  const res = await Auth.resetPassword(email);
+  if (res.ok) { alert('Reset link sent! Check your inbox.'); document.getElementById('loginModal')?.classList.remove('open'); }
+  else alert(res.error || 'Failed to send reset email');
+});
+
+// Google login/register — both buttons do same thing
+function doGoogleAuth() {
+  if (window.Auth?.googleSignIn) {
+    window.Auth.googleSignIn();
+  } else if (window.firebase_auth) {
+    const provider = new window.firebase_auth.GoogleAuthProvider();
+    window.firebase_auth.getAuth().signInWithRedirect(provider);
+  }
+}
+document.getElementById('doGoogleLogin')?.addEventListener('click', doGoogleAuth);
+document.getElementById('doGoogleRegister')?.addEventListener('click', doGoogleAuth);
+
+// Tab switching
+document.querySelectorAll('.account-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.account-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.account-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab)?.classList.add('active');
+    if (btn.dataset.tab === 'orders') loadAccountOrders();
+  });
+});
+
+// ─── PROFILE PICTURE ───
+
+// Apply avatar to the account page circle
+function applyAvatar(url) {
+  if (!url) return;
+  const avatarEl = document.getElementById('accountAvatar');
+  if (avatarEl) {
+    avatarEl.style.backgroundImage = `url(${url})`;
+    avatarEl.style.backgroundSize = 'cover';
+    avatarEl.style.backgroundPosition = 'center';
+    avatarEl.textContent = '';
+  }
+}
+
+// Compress image aggressively — max 250x250, quality 0.65 → ~15-35KB, safe for Firestore 1MB limit
+function compressImage(dataUrl, maxSide = 250, quality = 0.65) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const scale  = Math.min(maxSide / img.width, maxSide / img.height, 1);
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+}
+
+async function saveAvatarUrl(url) {
+  // 1. Save immediately to localStorage so it persists even if Firestore fails
+  const cached = JSON.parse(localStorage.getItem('sh_user_cache') || '{}');
+  cached.photoURL = url;
+  localStorage.setItem('sh_user_cache', JSON.stringify(cached));
+  // Also save a dedicated key for extra reliability
+  localStorage.setItem('sh_avatar_' + (cached.uid || 'guest'), url);
+
+  // 2. Update navbar instantly
+  if (window.updateNavAvatar) window.updateNavAvatar(url);
+
+  // 3. Try to save to Firestore (may fail if image too large, that's ok — localStorage is backup)
+  if (window.db && window.Auth?.currentUser) {
+    try {
+      await window.db.collection('users').doc(window.Auth.currentUser.uid).set(
+        { photoURL: url }, { merge: true }
+      );
+      showToast('Profile picture updated! ✅');
+    } catch(e) {
+      // Still show success — localStorage keeps it working
+      showToast('Profile picture saved locally ✅');
+    }
+  } else {
+    showToast('Profile picture saved ✅');
+  }
+}
+
+// ─── CROP MODAL ───
+let cropImage = null, cropCanvas = null, cropCtx = null;
+let cropDrag = false, cropStart = {x:0,y:0}, cropOffset = {x:0,y:0}, cropScale = 1;
+let cropImg = null;
+
+function openCropModal(dataUrl) {
+  const modal = document.getElementById('cropModal');
+  const canvas = document.getElementById('cropCanvas');
+  if (!modal || !canvas) return;
+  cropCanvas = canvas;
+  cropCtx = canvas.getContext('2d');
+  cropOffset = {x:0, y:0};
+  cropScale  = 1;
+  cropImg    = new Image();
+  cropImg.onload = () => {
+    drawCrop();
+    modal.style.display = 'flex';
+  };
+  cropImg.src = dataUrl;
+}
+
+function drawCrop() {
+  const S = 280; // canvas size
+  cropCtx.clearRect(0,0,S,S);
+  // Dark bg
+  cropCtx.fillStyle = '#0a0a0a';
+  cropCtx.fillRect(0,0,S,S);
+  // Draw image with offset+scale
+  const iw = cropImg.naturalWidth  * cropScale;
+  const ih = cropImg.naturalHeight * cropScale;
+  const ix = (S - iw) / 2 + cropOffset.x;
+  const iy = (S - ih) / 2 + cropOffset.y;
+  cropCtx.drawImage(cropImg, ix, iy, iw, ih);
+  // Vignette overlay (darken corners, keep center bright)
+  cropCtx.strokeStyle = 'rgba(232,28,28,.8)';
+  cropCtx.lineWidth = 2;
+  cropCtx.strokeRect(1,1,S-2,S-2);
+  // Grid lines hint
+  cropCtx.strokeStyle = 'rgba(255,255,255,.12)';
+  cropCtx.lineWidth = 1;
+  for (let i=1;i<3;i++) {
+    cropCtx.beginPath(); cropCtx.moveTo(S/3*i,0); cropCtx.lineTo(S/3*i,S); cropCtx.stroke();
+    cropCtx.beginPath(); cropCtx.moveTo(0,S/3*i); cropCtx.lineTo(S,S/3*i); cropCtx.stroke();
+  }
+}
+
+// Crop event handlers are initialized after modal HTML loads (see end of file)
+
+// Click avatar wrap → file picker
+document.getElementById('avatarWrap')?.addEventListener('click', () => {
+  document.getElementById('avatarFileInput')?.click();
+});
+
+// File selected → open crop modal
+document.getElementById('avatarFileInput')?.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => openCropModal(ev.target.result);
+  reader.readAsDataURL(file);
+  // Reset input so same file can be re-selected
+  e.target.value = '';
+});
+
+// URL button → prompt for URL → open crop
+document.getElementById('avatarUrlBtn')?.addEventListener('click', () => {
+  const url = prompt('Paste your image URL:');
+  if (!url || !url.startsWith('http')) { if(url !== null) showToast('Please enter a valid URL.', 'error'); return; }
+  openCropModal(url);
+});
+
+// Load avatar on page load — check localStorage first (instant), then Firestore
+function loadAvatarOnInit() {
+  // 1. Instant from localStorage cache
+  const cached = JSON.parse(localStorage.getItem('sh_user_cache') || '{}');
+  if (cached.photoURL) { applyAvatar(cached.photoURL); return; }
+  // Also check dedicated key
+  if (cached.uid) {
+    const local = localStorage.getItem('sh_avatar_' + cached.uid);
+    if (local) { applyAvatar(local); return; }
+  }
+}
+loadAvatarOnInit();
+
+document.addEventListener('authStateChanged', async (e) => {
+  const uid = e.detail?.uid;
+  if (!uid) return;
+  // Check dedicated localStorage key first
+  const local = localStorage.getItem('sh_avatar_' + uid);
+  if (local) { applyAvatar(local); }
+  // Then verify/update from Firestore
+  if (window.db) {
+    setTimeout(async () => {
+      try {
+        const doc = await window.db.collection('users').doc(uid).get();
+        const photoURL = doc.data()?.photoURL;
+        if (photoURL) {
+          applyAvatar(photoURL);
+          // Sync to localStorage
+          localStorage.setItem('sh_avatar_' + uid, photoURL);
+          const c = JSON.parse(localStorage.getItem('sh_user_cache') || '{}');
+          c.photoURL = photoURL;
+          localStorage.setItem('sh_user_cache', JSON.stringify(c));
+          if (window.updateNavAvatar) window.updateNavAvatar(photoURL);
+        }
+      } catch(err) {}
+    }, 600);
+  }
+});
+
+// Save profile
+document.getElementById('saveProfile')?.addEventListener('click', async () => {
+  const btn   = document.getElementById('saveProfile');
+  const name  = document.getElementById('profName').value.trim();
+  const phone = document.getElementById('profPhone').value.trim();
+  if (!name) { showToast('Name cannot be empty.', 'error'); return; }
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  const res = await Auth.updateProfile({ name, phone });
+  btn.textContent = 'SAVE CHANGES'; btn.disabled = false;
+  if (res.ok) {
+    showToast('Profile updated! ✅');
+    document.getElementById('accountName').textContent   = name;
+    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
+  } else showToast(res.msg, 'error');
+});
+
+// Change password
+document.getElementById('changePassBtn')?.addEventListener('click', async () => {
+  const np = document.getElementById('newPassword').value;
+  const cp = document.getElementById('confirmPassword').value;
+  if (!np || np.length < 6) { showToast('Password must be at least 6 characters.', 'error'); return; }
+  if (np !== cp) { showToast('Passwords do not match.', 'error'); return; }
+  const res = await Auth.changePassword(np);
+  if (res.ok) { showToast('Password updated! ✅'); document.getElementById('newPassword').value = ''; document.getElementById('confirmPassword').value = ''; }
+  else showToast(res.msg, 'error');
+});
+
+// Load orders in account
+async function loadAccountOrders() {
+  const el = document.getElementById('acctOrdersList');
+  if (!el || !Auth.isLoggedIn()) return;
+  el.innerHTML = '<div class="orders-loading">Loading...</div>';
+  const orders = await Auth.getUserOrders();
+  if (!orders.length) { el.innerHTML = '<p style="color:var(--white2);text-align:center;padding:2rem">No orders yet. <a href="shop.html" style="color:var(--red)">Shop now →</a></p>'; return; }
+  const statusColors = { 'Pending':'#f39c12','Confirmed':'#2ecc71','Processing':'#3498db','Shipped':'#9b59b6','Delivered':'#27ae60','Cancelled':'#e74c3c' };
+  el.innerHTML = orders.slice(0, 5).map(o => {
+    const date  = o.date ? new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'N/A';
+    const color = statusColors[o.status] || '#888';
+    return `<div class="order-card-v2" style="margin-bottom:.8rem">
+      <div class="order-card-head">
+        <div class="order-card-meta"><div class="order-card-meta-label">Order ID</div><div class="order-card-meta-val">#${o.id}</div></div>
+        <div class="order-card-meta"><div class="order-card-meta-label">Date</div><div class="order-card-meta-val">${date}</div></div>
+        <div class="order-card-meta"><div class="order-card-meta-label">Total</div><div class="order-card-meta-val">₹${(o.total||0).toLocaleString('en-IN')}</div></div>
+        <span class="order-status-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">${o.status}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+</script>
+
+<!-- ─── CROP MODAL ─── -->
+<div id="cropModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="background:#0d1117;border:1px solid rgba(232,28,28,.25);border-radius:18px;padding:1.5rem;width:min(340px,94vw);text-align:center;">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:800;letter-spacing:.15em;color:rgba(255,255,255,.5);margin-bottom:.8rem;">ADJUST PROFILE PICTURE</div>
+    <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;border:2px solid rgba(232,28,28,.35);">
+      <canvas id="cropCanvas" width="280" height="280" style="display:block;cursor:grab;touch-action:none;"></canvas>
+    </div>
+    <div style="font-size:.68rem;color:rgba(255,255,255,.35);margin:.6rem 0 .9rem;font-family:'Montserrat',sans-serif;">Drag to reposition · Scroll/pinch to zoom</div>
+    <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:1rem;">
+      <button id="cropZoomOut" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:.4rem .8rem;font-size:1rem;cursor:pointer;">−</button>
+      <button id="cropReset"   style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);border-radius:8px;padding:.4rem .9rem;font-size:.65rem;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:.08em;cursor:pointer;">RESET</button>
+      <button id="cropZoomIn"  style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:.4rem .8rem;font-size:1rem;cursor:pointer;">+</button>
+    </div>
+    <div style="display:flex;gap:.7rem;">
+      <button id="cropCancel"  style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);border-radius:10px;padding:.7rem;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;cursor:pointer;">CANCEL</button>
+      <button id="cropConfirm" style="flex:2;background:#e81c1c;border:none;color:#fff;border-radius:10px;padding:.7rem;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.1em;cursor:pointer;">✓ SET AS PROFILE PIC</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Init crop events NOW — modal HTML is in DOM at this point
+(function() {
+  const c = document.getElementById('cropCanvas');
+  if (!c) return;
+  const getPos = (e) => {
+    const r = c.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - r.left, y: src.clientY - r.top };
+  };
+  let last = null, dragging = false;
+  const down = (e) => { dragging = true; last = getPos(e); e.preventDefault(); };
+  const move = (e) => {
+    if (!dragging || !last) return;
+    const p = getPos(e);
+    cropOffset.x += p.x - last.x;
+    cropOffset.y += p.y - last.y;
+    last = p;
+    drawCrop();
+    e.preventDefault();
+  };
+  const up = () => { dragging = false; last = null; };
+  c.addEventListener('mousedown', down);
+  c.addEventListener('mousemove', move);
+  c.addEventListener('mouseup',   up);
+  c.addEventListener('mouseleave', up);
+  c.addEventListener('touchstart', down, {passive:false});
+  c.addEventListener('touchmove',  move, {passive:false});
+  c.addEventListener('touchend',   up);
+  c.addEventListener('wheel', (e) => {
+    cropScale = Math.max(0.3, Math.min(5, cropScale - e.deltaY * 0.003));
+    drawCrop(); e.preventDefault();
+  }, {passive:false});
+
+  document.getElementById('cropZoomIn')?.addEventListener('click',  () => { cropScale = Math.min(5, cropScale + 0.15); drawCrop(); });
+  document.getElementById('cropZoomOut')?.addEventListener('click', () => { cropScale = Math.max(0.3, cropScale - 0.15); drawCrop(); });
+  document.getElementById('cropReset')?.addEventListener('click',   () => { cropScale = 1; cropOffset = {x:0, y:0}; drawCrop(); });
+  document.getElementById('cropCancel')?.addEventListener('click',  () => {
+    document.getElementById('cropModal').style.display = 'none';
+  });
+  document.getElementById('cropConfirm')?.addEventListener('click', async () => {
+    // Export at 0.88 quality for display (good looking)
+    const displayUrl = cropCanvas.toDataURL('image/jpeg', 0.88);
+    // But compress aggressively for Firestore storage
+    const storeUrl = await compressImage(displayUrl, 250, 0.65);
+    document.getElementById('cropModal').style.display = 'none';
+    // Show the nice looking version locally
+    applyAvatar(displayUrl);
+    // Save compressed version to Firestore + localStorage
+    await saveAvatarUrl(storeUrl);
+    // Also update localStorage with the display version for instant restore
+    const cached = JSON.parse(localStorage.getItem('sh_user_cache') || '{}');
+    cached.photoURL = storeUrl;
+    localStorage.setItem('sh_user_cache', JSON.stringify(cached));
+    if (cached.uid) localStorage.setItem('sh_avatar_' + cached.uid, storeUrl);
+  });
+})();
+</script>
+
+</body>
+</html>
