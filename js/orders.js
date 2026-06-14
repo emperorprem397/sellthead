@@ -46,17 +46,27 @@
   }
 
   function renderOrderCard(o) {
-    const date   = o.date ? new Date(o.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+    // Support both date formats: Firestore Timestamp (createdAt) and ISO string (date)
+    let dateStr = 'N/A';
+    if (o.createdAt && o.createdAt.toDate) {
+      dateStr = o.createdAt.toDate().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    } else if (o.date) {
+      dateStr = new Date(o.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    // Ship to name — support both delivery object and flat fields
+    const shipName = o.delivery
+      ? ((o.delivery.fname || '') + ' ' + (o.delivery.lname || '')).trim()
+      : (o.customerName || o.userName || 'N/A');
     const color  = STATUS_COLORS[o.status] || '#888';
     const items  = Array.isArray(o.items) ? o.items : [];
-    const waMsg  = encodeURIComponent(`Hi! I want to track my order.\n\nOrder ID: ${o.id}\nDate: ${date}\nTotal: ₹${(o.total||0).toLocaleString('en-IN')}`);
+    const waMsg  = encodeURIComponent(`Hi! I want to track my order.\n\nOrder ID: ${o.id}\nDate: ${dateStr}\nTotal: ₹${(o.total||0).toLocaleString('en-IN')}`);
 
     return `
       <div class="order-card-v2 fade-in">
         <div class="order-card-head">
           <div class="order-card-meta">
             <div class="order-card-meta-label">ORDER PLACED</div>
-            <div class="order-card-meta-val">${date}</div>
+            <div class="order-card-meta-val">${dateStr}</div>
           </div>
           <div class="order-card-meta">
             <div class="order-card-meta-label">TOTAL</div>
@@ -64,7 +74,7 @@
           </div>
           <div class="order-card-meta">
             <div class="order-card-meta-label">SHIP TO</div>
-            <div class="order-card-meta-val">${o.delivery ? o.delivery.fname + ' ' + (o.delivery.lname||'') : 'N/A'}</div>
+            <div class="order-card-meta-val">${shipName}</div>
           </div>
           <div class="order-card-meta" style="flex:1.5">
             <div class="order-card-meta-label">ORDER ID</div>
@@ -76,12 +86,12 @@
         <div class="order-card-body">
           ${items.length ? items.map(item => `
             <div class="order-item-row">
-              <img class="order-item-img" src="${item.image || 'images/products_ref.png'}" alt="${item.title}" onerror="this.style.background='#0a0812';this.src=''" />
+              <img class="order-item-img" src="${item.image || 'images/products_ref.png'}" alt="${item.title||item.name||''}" onerror="this.style.background='#0a0812';this.src=''" />
               <div class="order-item-info">
-                <div class="order-item-name">${item.title}</div>
-                <div class="order-item-meta">Size: ${item.size} &nbsp;·&nbsp; Qty: ${item.qty}</div>
+                <div class="order-item-name">${item.title || item.name || 'Product'}</div>
+                <div class="order-item-meta">Size: ${item.size || 'N/A'} &nbsp;·&nbsp; Qty: ${item.qty}</div>
               </div>
-              <div class="order-item-price">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+              <div class="order-item-price">₹${((item.price||0) * (item.qty||1)).toLocaleString('en-IN')}</div>
             </div>
           `).join('') : `<div class="order-item-row"><div class="order-item-name" style="color:var(--white2)">Order items unavailable</div></div>`}
         </div>

@@ -341,21 +341,51 @@
     const subtotal = getCartSubtotal();
     const finalTotal = updateOrderTotal(subtotal);
 
+    // Get logged-in user info to save with order
+    const userName = user
+      ? (user.displayName || (user.email ? user.email.split('@')[0] : 'Customer'))
+      : (orderData.customerName || 'Guest');
+    const userEmail = user ? user.email : (orderData.email || '');
+    // Build items with BOTH `name` and `title` so admin and orders page both work
+    const orderItems = cart.map(i => ({
+      id:    i.id,
+      name:  i.name  || i.title || 'Product',
+      title: i.title || i.name  || 'Product',
+      image: i.image || '',
+      price: Number(i.price),
+      qty:   Number(i.qty) || 1,
+      size:  i.size || 'One Size'
+    }));
+    const nowDate = new Date().toISOString(); // plain date string for admin/orders compatibility
     const order = {
       ...orderData,
-      userId: user ? user.uid : 'guest',
-      items: cart.map(i => ({
-        id: i.id,
-        name: i.name || i.title,
-        price: Number(i.price),
-        qty: Number(i.qty) || 1,
-        size: i.size || ''
-      })),
-      subtotal: subtotal,
-      discountCode: appliedDiscount ? appliedDiscount.code : null,
-      discountPercent: appliedDiscount ? appliedDiscount.percent : 0,
+      // User identity
+      userId:       user ? user.uid : 'guest',
+      userName:     userName,
+      userEmail:    userEmail,
+      customerName: orderData.customerName || userName,
+      email:        orderData.email        || userEmail,
+      phone:        orderData.phone        || '',
+      // Address — save as both `address` string AND `delivery` object
+      address: orderData.address || '',
+      delivery: {
+        fname:   (orderData.customerName || userName).split(' ')[0] || '',
+        lname:   (orderData.customerName || userName).split(' ').slice(1).join(' ') || '',
+        address: orderData.address || '',
+        phone:   orderData.phone   || '',
+        email:   orderData.email   || userEmail
+      },
+      // Items with both field names
+      items: orderItems,
+      // Pricing
+      subtotal:       subtotal,
+      discountCode:   appliedDiscount ? appliedDiscount.code    : null,
+      discountPercent:appliedDiscount ? appliedDiscount.percent : 0,
       total: finalTotal,
+      // Status
       status: 'pending',
+      // Date — save as BOTH Firestore timestamp AND plain ISO string
+      date:      nowDate,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 

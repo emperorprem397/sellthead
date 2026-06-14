@@ -862,7 +862,7 @@ async function loadOrders(){
 
 function renderOrderStats(){
   const total    = allOrders.length;
-  const pending  = allOrders.filter(o=>o.status==='Pending').length;
+  const pending  = allOrders.filter(o=>(o.status||'').toLowerCase()==='pending').length;
   const delivered= allOrders.filter(o=>o.status==='Delivered').length;
   const rev      = allOrders.filter(o=>o.status!=='Cancelled').reduce((s,o)=>s+(o.total||0),0);
   document.getElementById('statTotal').textContent    = total;
@@ -901,8 +901,8 @@ function renderOrdersTable(orders){
   tbody.innerHTML = orders.map(o => {
     const date  = o.date ? new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'N/A';
     const color = STATUS_COLORS[o.status]||'#888';
-    const items = Array.isArray(o.items) ? o.items.map(i=>`${i.title} ×${i.qty}`).join(', ') : 'N/A';
-    const name  = o.delivery ? `${o.delivery.fname||''} ${o.delivery.lname||''}`.trim() : (o.userName||'Guest');
+    const items = Array.isArray(o.items) ? o.items.map(i=>`${i.title||i.name||'Product'} ×${i.qty}`).join(', ') : 'N/A';
+    const name  = (o.customerName||o.userName||(o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():'')||'Guest').trim()||'Guest';
     const phone = o.delivery?.phone||'';
     const waMsg = encodeURIComponent(`Hi ${o.delivery?.fname||''}! Your SELLTHEAD order #${o.id} status update.`);
     return `<tr>
@@ -935,8 +935,8 @@ function renderRecentOrders(){
     <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
     <tbody>${recent.map(o=>{
       const c=STATUS_COLORS[o.status]||'#888';
-      const name=o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():(o.userName||'Guest');
-      const date=o.date?new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'N/A';
+      const name=(o.customerName||o.userName||(o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():'')||'Guest').trim()||'Guest';
+      let _d6=null; if(o.createdAt?.toDate)_d6=o.createdAt.toDate(); else if(o.date)_d6=new Date(o.date); const date=_d6?_d6.toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'N/A';
       return `<tr>
         <td><span class="cell-red">#${o.id.slice(-8)}</span></td>
         <td style="font-weight:600">${name}</td>
@@ -972,7 +972,7 @@ async function updateOrderStatus(orderId, newStatus){
 function openOrderModal(orderId){
   const o = allOrders.find(x=>x.id===orderId);
   if(!o) return;
-  const name  = o.delivery ? `${o.delivery.fname||''} ${o.delivery.lname||''}`.trim() : (o.userName||'Guest');
+  const name  = (o.customerName||o.userName||(o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():'')||'Guest').trim()||'Guest';
   const items = Array.isArray(o.items) ? o.items : [];
   const trackIdx = TRACK_STEPS.indexOf(o.status);
   const waMsg = encodeURIComponent(`Hi ${o.delivery?.fname||''}! Update on your SELLTHEAD order #${o.id}`);
@@ -983,9 +983,9 @@ function openOrderModal(orderId){
       <div class="order-detail-label">Customer Info</div>
       <div class="order-detail-grid">
         <div><div class="odg-label">Name</div><div class="odg-val">${name}</div></div>
-        <div><div class="odg-label">Phone</div><div class="odg-val">${o.delivery?.phone||'N/A'}</div></div>
+        <div><div class="odg-label">Phone</div><div class="odg-val">${o.phone||o.delivery?.phone||'N/A'}</div></div>
         <div><div class="odg-label">Email</div><div class="odg-val" style="font-size:.78rem">${o.userEmail||'N/A'}</div></div>
-        <div><div class="odg-label">Date</div><div class="odg-val">${o.date?new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'N/A'}</div></div>
+        <div><div class="odg-label">Date</div><div class="odg-val">${(()=>{let d=o.createdAt?.toDate?o.createdAt.toDate():(o.date?new Date(o.date):null);return d?d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'N/A';})()}</div></div>
       </div>
     </div>
     <div class="order-detail-section">
@@ -996,9 +996,9 @@ function openOrderModal(orderId){
       <div class="order-detail-label">Items Ordered</div>
       ${items.map(item=>`
         <div class="order-item-row">
-          <img class="order-item-img" src="../${item.image||'images/products_ref.png'}" onerror="this.style.opacity='.3'" alt="${item.title}"/>
+          <img class="order-item-img" src="../${item.image||'images/products_ref.png'}" onerror="this.style.opacity='.3'" alt="${item.title||item.name||''}"/>
           <div style="flex:1">
-            <div class="order-item-name">${item.title}</div>
+            <div class="order-item-name">${item.title||item.name||'Product'}</div>
             <div class="order-item-sub">Size: ${item.size} · Qty: ${item.qty}</div>
           </div>
           <div class="cell-bold">₹${((item.price||0)*(item.qty||1)).toLocaleString('en-IN')}</div>
