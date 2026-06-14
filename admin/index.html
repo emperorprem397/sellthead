@@ -1113,7 +1113,7 @@ function openOrderModal(orderId){
           </div>
         </div>
         <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(0,204,136,.15);font-size:.78rem;color:var(--muted)">
-          💡 <strong style="color:#fff">${o.discountCode}</strong> = ${(()=>{const code=(o.discountCode||'').toUpperCase();if(code.includes('PRATIK'))return 'Pratik's code — pay 10% commission to <strong style="color:#00cc88">Pratik</strong>';if(code.includes('PRIYANSH'))return 'Priyansh's code — pay 10% commission to <strong style="color:#00cc88">Priyansh</strong>';if(code.includes('DISHANT'))return 'Dishant's code — pay 10% commission to <strong style="color:#00cc88">Dishant</strong>';if(code.includes('SAURABH'))return 'Saurabh's code — pay 10% commission to <strong style="color:#00cc88">Saurabh</strong>';if(code.includes('PRINCE'))return 'Prince's code — pay 10% commission to <strong style="color:#00cc88">Prince</strong>';if(code.includes('SAMAR'))return 'Samar's code — pay 10% commission to <strong style="color:#00cc88">Samar</strong>';return 'Collaborator code';})()}
+          💡 <strong style="color:#fff">${o.discountCode}</strong> = ${(()=>{const code=(o.discountCode||'').toUpperCase();if(code.includes('PRATIK'))return 'Pratik — pay 10% commission';if(code.includes('PRIYANSH'))return 'Priyansh — pay 10% commission';if(code.includes('DISHANT'))return 'Dishant — pay 10% commission';if(code.includes('SAURABH'))return 'Saurabh — pay 10% commission';if(code.includes('PRINCE'))return 'Prince — pay 10% commission';if(code.includes('SAMAR'))return 'Samar — pay 10% commission';return 'Collaborator code';})()}
           &nbsp;→ Commission: <strong style="color:#ffd700">₹${Math.round((o.total||0)*((o.discountPercent||0)/100)).toLocaleString('en-IN')}</strong>
         </div>
       </div>` : '<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted)">No discount code used</div>'}
@@ -1718,7 +1718,7 @@ function enableBrowserNotifs(){
   Notification.requestPermission().then(p=>{
     document.getElementById('notifAllowBar').style.display='none';
     localStorage.setItem('notifBarDismissed','1');
-    if(p==='granted') addNotif('✅','Browser notifications enabled! You'll be alerted for new orders.',false);
+    if(p==='granted') addNotif('✅','Browser notifications enabled! You will be alerted for new orders.',false);
   });
 }
 </script>
