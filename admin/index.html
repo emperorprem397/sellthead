@@ -713,12 +713,15 @@ let notifs = JSON.parse(localStorage.getItem('stAdmin_notifs') || '[]');
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js'
   ];
-  let n = 0;
-  scripts.forEach(src => {
-    const s = document.createElement('script'); s.src = src;
-    s.onload = () => { if(++n === scripts.length) init(); };
+  function loadNext(i) {
+    if (i >= scripts.length) { init(); return; }
+    const s = document.createElement('script');
+    s.src = scripts[i];
+    s.onload  = () => loadNext(i + 1);
+    s.onerror = () => loadNext(i + 1);
     document.head.appendChild(s);
-  });
+  }
+  loadNext(0);
 })();
 
 function init(){
@@ -732,11 +735,38 @@ function init(){
   document.getElementById('adminLogout').addEventListener('click', doLogout);
 
   auth.onAuthStateChanged(async user => {
-    if(!user) return;
+    if (!user) {
+      // Show login screen
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').style.display  = 'none';
+      // Handle Google redirect result (mobile flow)
+      try {
+        const result = await auth.getRedirectResult();
+        if (result && result.user) {
+          const snap = await db.collection('users').doc(result.user.uid).get();
+          if (snap.exists && snap.data().role === 'admin') {
+            showDashboard(result.user.displayName || result.user.email);
+            addLog('🔑', 'Admin logged in via Google: ' + result.user.email);
+          } else {
+            await auth.signOut();
+            document.getElementById('loginErr').textContent = 'Access denied — this Google account is not an admin.';
+          }
+        }
+      } catch(e) { /* no redirect pending */ }
+      return;
+    }
+    // User is signed in — verify admin role
     try {
       const snap = await db.collection('users').doc(user.uid).get();
-      if(snap.exists && snap.data().role === 'admin') showDashboard(user.displayName || user.email);
-    } catch(e){}
+      if (snap.exists && snap.data().role === 'admin') {
+        showDashboard(user.displayName || user.email);
+      } else {
+        await auth.signOut();
+        document.getElementById('loginErr').textContent = 'Access denied — not an admin account.';
+      }
+    } catch(e) {
+      console.error('Admin auth check failed:', e);
+    }
   });
 
   // Sidebar nav
