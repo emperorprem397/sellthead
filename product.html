@@ -765,8 +765,8 @@
     document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
   }, 80);
 
-  // Render reviews for this product
-  renderReviews(p.id);
+  // Store product id for reviews
+  window._currentProductId = p.id;
 })();
 
 function toggleAcc(id) {
@@ -855,6 +855,9 @@ function toggleAcc(id) {
     // Fade in cards
     setTimeout(() => grid.querySelectorAll('.review-card').forEach(c => c.style.opacity='1'), 100);
   }
+
+  // Now that ALL_REVIEWS and renderReviews are both defined, render reviews
+  if (window._currentProductId) renderReviews(window._currentProductId);
 
   /* ── IMAGE LIGHTBOX ── */
   let _lbImgs = [], _lbIdx = 0;
