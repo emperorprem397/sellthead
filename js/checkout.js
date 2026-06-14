@@ -51,37 +51,41 @@
   // ── Init ─────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     loadDiscountCodes(); // load live codes from Firestore
-    renderCheckoutItems();
+    syncPricesThenRender(); // sync prices from Firestore, then render
     initStepButtons();
     initDiscountCode();
     Auth.handleRedirectResult && Auth.handleRedirectResult();
   });
 
+  // Sync cart prices from Firestore once on load, then render
+  function syncPricesThenRender() {
+    function doRender() { renderCheckoutItems(); updateOrderTotal(getCartSubtotal()); }
+    if (!window.db) { doRender(); return; }
+    window.db.collection('products').get().then(snap => {
+      if (snap.empty) { doRender(); return; }
+      const items = getCart();
+      let updated = false;
+      snap.docs.forEach(d => {
+        const fs = d.data();
+        const fsId = String(fs.id !== undefined ? fs.id : d.id);
+        items.forEach((item, idx) => {
+          if (String(item.id) === fsId && fs.price !== undefined && Number(fs.price) !== Number(item.price)) {
+            items[idx] = { ...item, price: Number(fs.price) };
+            updated = true;
+          }
+        });
+      });
+      if (updated) {
+        try { localStorage.setItem('sh_cart', JSON.stringify(items)); } catch(e) {}
+        if (typeof Cart !== 'undefined') { Cart.items = items; Cart.render(); }
+      }
+      doRender();
+    }).catch(() => doRender());
+  }
+
   // ── Cart Items Display ───────────────────────────────────
   function renderCheckoutItems() {
     const cart = getCart();
-    // Patch cart prices from Firestore live prices if available
-    if (window.db) {
-      window.db.collection('products').get().then(snap => {
-        if (snap.empty) return;
-        let updated = false;
-        const items = getCart();
-        snap.docs.forEach(d => {
-          const fs = d.data();
-          const fsId = String(fs.id || d.id);
-          items.forEach((item, i) => {
-            if (String(item.id) === fsId && fs.price !== undefined && fs.price !== item.price) {
-              items[i] = {...item, price: fs.price};
-              updated = true;
-            }
-          });
-        });
-        if (updated) {
-          try { localStorage.setItem('sh_cart', JSON.stringify(items)); } catch(e) {}
-          renderCheckoutItems(); // re-render with corrected prices
-        }
-      }).catch(() => {});
-    }
     const container = document.getElementById('checkoutItemsList');
     const cartCountEl = document.getElementById('cartCount');
     

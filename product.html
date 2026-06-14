@@ -645,21 +645,48 @@
   function patchProductPrice() {
     if (!window.db) { setTimeout(patchProductPrice, 600); return; }
     window.db.collection('products').doc(String(id)).get().then(doc => {
-      if (!doc.exists) return;
-      const fs = doc.data();
-      const livePrice    = fs.price    !== undefined ? fs.price    : p.price;
-      const liveOldPrice = fs.oldPrice !== undefined ? fs.oldPrice : p.oldPrice;
-      if (livePrice !== p.price || liveOldPrice !== p.oldPrice) {
-        renderPrice(livePrice, liveOldPrice);
+      if (!doc.exists) {
+        // Try fetching by querying id field instead
+        window.db.collection('products').where('id','==', id).get().then(snap => {
+          if (!snap.empty) applyLivePrice(snap.docs[0].data());
+        }).catch(()=>{});
+        return;
       }
-      // Also update inStock
-      if (fs.inStock === false) {
-        const addBtn = document.querySelector('.pd2-btn-cart');
-        const buyBtn = document.querySelector('.pd2-btn-buy');
-        if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'OUT OF STOCK'; addBtn.style.opacity = '.5'; }
-        if (buyBtn) { buyBtn.disabled = true; buyBtn.style.opacity = '.5'; }
-      }
-    }).catch(() => {});
+      applyLivePrice(doc.data());
+    }).catch(() => {
+      // Fallback: query by id field
+      window.db.collection('products').where('id','==', id).get().then(snap => {
+        if (!snap.empty) applyLivePrice(snap.docs[0].data());
+      }).catch(()=>{});
+    });
+  }
+
+  function applyLivePrice(fs) {
+    const livePrice    = fs.price    !== undefined ? Number(fs.price)    : p.price;
+    const liveOldPrice = fs.oldPrice !== undefined ? Number(fs.oldPrice) : p.oldPrice;
+    // ── KEY FIX: update p.price so Add to Cart uses the live price ──
+    p.price    = livePrice;
+    p.oldPrice = liveOldPrice;
+    renderPrice(livePrice, liveOldPrice);
+    // Also fix any cart items already added with the old price
+    if (typeof Cart !== 'undefined') {
+      let cartUpdated = false;
+      Cart.items = Cart.items.map(ci => {
+        if (String(ci.id) === String(id) && ci.price !== livePrice) {
+          cartUpdated = true;
+          return { ...ci, price: livePrice };
+        }
+        return ci;
+      });
+      if (cartUpdated) { Cart.save(); Cart.render(); }
+    }
+    // Also update inStock
+    if (fs.inStock === false) {
+      const addBtn = document.querySelector('.pd2-btn-cart');
+      const buyBtn = document.querySelector('.pd2-btn-buy');
+      if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'OUT OF STOCK'; addBtn.style.opacity = '.5'; }
+      if (buyBtn) { buyBtn.disabled = true; buyBtn.style.opacity = '.5'; }
+    }
   }
   setTimeout(patchProductPrice, 400);
 
