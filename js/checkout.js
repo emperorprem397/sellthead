@@ -22,17 +22,35 @@
     localStorage.removeItem('sh_cart');
   }
 
-  const DISCOUNT_CODES = {
-    'PRATIK10':   10,
-    'PRIYANSH10': 10,
-    'DISHANT10':  10,
-    'SAURABH10':  10,
-    'SAMAR10':    10,
-    'PRINCE10':   10
+  // Discount codes loaded from Firestore (admin can activate/deactivate)
+  let DISCOUNT_CODES = {};
+  const FALLBACK_CODES = {
+    'PRATIK10':10,'PRIYANSH10':10,'DISHANT10':10,
+    'SAURABH10':10,'SAMAR10':10,'PRINCE10':10
   };
+
+  function loadDiscountCodes() {
+    if (!window.db) { setTimeout(loadDiscountCodes, 600); return; }
+    window.db.collection('discountCodes').get().then(snap => {
+      if (snap.empty) { DISCOUNT_CODES = FALLBACK_CODES; return; }
+      DISCOUNT_CODES = {};
+      snap.docs.forEach(d => {
+        const data = d.data();
+        const code = (data.code || d.id || '').toUpperCase();
+        // Only load ACTIVE codes — respect admin deactivation
+        if (code && data.active !== false) {
+          const pct = Number(data.discount || data.percent || 10);
+          DISCOUNT_CODES[code] = pct;
+        }
+      });
+      // If nothing loaded from Firestore, fallback
+      if (!Object.keys(DISCOUNT_CODES).length) DISCOUNT_CODES = FALLBACK_CODES;
+    }).catch(() => { DISCOUNT_CODES = FALLBACK_CODES; });
+  }
 
   // ── Init ─────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
+    loadDiscountCodes(); // load live codes from Firestore
     renderCheckoutItems();
     initStepButtons();
     initDiscountCode();
@@ -42,6 +60,28 @@
   // ── Cart Items Display ───────────────────────────────────
   function renderCheckoutItems() {
     const cart = getCart();
+    // Patch cart prices from Firestore live prices if available
+    if (window.db) {
+      window.db.collection('products').get().then(snap => {
+        if (snap.empty) return;
+        let updated = false;
+        const items = getCart();
+        snap.docs.forEach(d => {
+          const fs = d.data();
+          const fsId = String(fs.id || d.id);
+          items.forEach((item, i) => {
+            if (String(item.id) === fsId && fs.price !== undefined && fs.price !== item.price) {
+              items[i] = {...item, price: fs.price};
+              updated = true;
+            }
+          });
+        });
+        if (updated) {
+          try { localStorage.setItem('sh_cart', JSON.stringify(items)); } catch(e) {}
+          renderCheckoutItems(); // re-render with corrected prices
+        }
+      }).catch(() => {});
+    }
     const container = document.getElementById('checkoutItemsList');
     const cartCountEl = document.getElementById('cartCount');
     

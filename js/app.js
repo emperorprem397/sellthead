@@ -406,6 +406,14 @@ function quickAddToCart(id) {
         };
       });
       renderWith(merged);
+      // ── Sync cart item prices with live Firestore prices ──
+      let cartUpdated = false;
+      Cart.items = Cart.items.map(ci => {
+        const live = merged.find(p => String(p.id) === String(ci.id));
+        if (live && live.price !== ci.price) { cartUpdated = true; return {...ci, price: live.price}; }
+        return ci;
+      });
+      if (cartUpdated) { Cart.save(); Cart.render(); }
     }).catch(() => {}); // silently fallback to data.js
   }
   // Start patching after short delay to let Firebase initialize
@@ -541,17 +549,16 @@ document.addEventListener('authStateChanged', (e) => {
     Cart.items = [];
     Cart.render();
     // Show login gate for new/guest visitors on main pages only
-    const isMainPage = document.getElementById('featuredGrid') || document.getElementById('shopGrid');
-    const gateShown = sessionStorage.getItem('st_gateShown');
-    if(isMainPage && !gateShown) {
-      setTimeout(showLoginGate, 800); // slight delay for page to render
+    // Show gate on all public-facing pages (not admin)
+    const isAdminPage = window.location.pathname.includes('/admin');
+    if(!isAdminPage) {
+      setTimeout(showLoginGate, 600);
     }
   }
 });
 
 /* ── LOGIN GATE — shown to first-time/logged-out visitors ── */
 function showLoginGate(){
-  sessionStorage.setItem('st_gateShown','1');
   // Inject gate HTML if not present
   if(document.getElementById('loginGate')) {
     document.getElementById('loginGate').classList.add('open');
@@ -567,8 +574,7 @@ function showLoginGate(){
       <div class="lg-title">Welcome 👋</div>
       <div class="lg-sub">Sign in to shop, track orders, and get exclusive deals.</div>
       <div class="lg-actions">
-        <button class="lg-btn-primary" onclick="document.getElementById('loginGate').classList.remove('open');openAuthModal('login')">LOGIN / REGISTER</button>
-        <button class="lg-btn-ghost" onclick="document.getElementById('loginGate').classList.remove('open');sessionStorage.setItem('st_gateShown','forever')">Continue as Guest →</button>
+        <button class="lg-btn-primary" onclick="openAuthModal('login')">LOGIN / REGISTER</button>
       </div>
       <div class="lg-note">Already logged in? Your session will restore automatically.</div>
     </div>`;
@@ -602,6 +608,8 @@ function showLoginGate(){
   document.head.appendChild(style);
   document.body.appendChild(gate);
   requestAnimationFrame(() => gate.classList.add('open'));
+  // Prevent closing by clicking overlay - mandatory login
+  gate.querySelector('.lg-overlay').addEventListener('click', e => e.stopPropagation());
 }
 
 /* ─── HANDLE GOOGLE REDIRECT RESULT ON PAGE LOAD ─── */
