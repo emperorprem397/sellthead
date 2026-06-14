@@ -406,9 +406,12 @@
   };
 
   function sendWhatsAppNotification(order, orderId) {
-    const itemList = order.items.map(i => `• ${i.name} (${i.size || 'N/A'}) x${i.qty} = ₹${i.price * i.qty}`).join('\n');
-    const discount = order.discountCode ? `\nDiscount (${order.discountCode}): -${order.discountPercent}%` : '';
-    const msg = `🛒 *NEW ORDER — SELLTHEAD*\n\nOrder ID: ${orderId.slice(0,10)}\nCustomer: ${order.customerName}\nPhone: ${order.phone}\nEmail: ${order.email}\nAddress: ${order.address}\n\nItems:\n${itemList}${discount}\n\n*Total: ₹${order.total}*\n\nStatus: PENDING`;
+    const itemList = order.items.map(i => `• ${i.name||i.title} (${i.size || 'N/A'}) x${i.qty} = ₹${(i.price * i.qty).toLocaleString('en-IN')}`).join('\n');
+    const discountAmt = order.discountCode ? ((order.subtotal||order.total) - order.total) : 0;
+    const discountLine = order.discountCode
+      ? `\n🎟️ Code: *${order.discountCode}* (${order.discountPercent}% off, −₹${discountAmt.toLocaleString('en-IN')})\n💼 Commission due: ₹${Math.round(order.total * order.discountPercent / 100).toLocaleString('en-IN')}`
+      : '\n(No discount code)';
+    const msg = `🛒 *NEW ORDER — SELLTHEAD*\n\nOrder ID: ${orderId.slice(0,10)}\nCustomer: ${order.customerName}\nPhone: ${order.phone}\nEmail: ${order.email}\nAddress: ${order.address}\n\nItems:\n${itemList}${discountLine}\n\n*Original: ₹${(order.subtotal||order.total).toLocaleString('en-IN')}*\n*Total Paid: ₹${order.total.toLocaleString('en-IN')}*\n\nStatus: PENDING ⏳`;
     const waUrl = `https://wa.me/917568521210?text=${encodeURIComponent(msg)}`;
     window.open(waUrl, '_blank');
   }

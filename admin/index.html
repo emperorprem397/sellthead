@@ -58,6 +58,9 @@
     .page-title span{color:var(--red)}
     .topbar-right{display:flex;align-items:center;gap:.8rem}
     .notif-bell{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:.45rem .6rem;cursor:pointer;position:relative;font-size:.95rem}
+  .notif-allow-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,#1a0d00,#2a1500);border-top:1px solid rgba(255,165,0,.3);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;z-index:9999;font-size:.85rem;color:#ffd700}
+  .notif-allow-bar button{background:#e81c1c;border:none;color:#fff;padding:.4rem 1.1rem;border-radius:8px;font-family:var(--font-cond);font-weight:700;font-size:.8rem;letter-spacing:.05em;cursor:pointer;white-space:nowrap}
+  .notif-allow-bar .notif-bar-close{background:transparent;color:rgba(255,255,255,.4);padding:.4rem .6rem}
     .notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--red);border-radius:50%;display:none}
     .notif-dot.show{display:block}
     .content{padding:1.6rem;flex:1;overflow-y:auto}
@@ -843,21 +846,73 @@ function switchPanel(name){
 }
 
 /* ══ ORDERS ══ */
+let _ordersUnsubscribe = null;
 async function loadOrders(){
-  try {
-    const snap = await db.collection('orders').get();
-    allOrders = snap.docs.map(d => ({id:d.id,...d.data()}));
-    allOrders.sort((a,b) => {
-      const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.date||0);
-      const db2= b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.date||0);
-      return db2-da;
+  // Use real-time listener so new orders appear instantly without refreshing
+  if (_ordersUnsubscribe) _ordersUnsubscribe(); // clear previous listener
+  _ordersUnsubscribe = db.collection('orders')
+    .orderBy('createdAt','desc')
+    .onSnapshot(snap => {
+      const prev = allOrders.length;
+      allOrders = snap.docs.map(d => ({id:d.id,...d.data()}));
+      renderOrderStats();
+      renderOrdersTable(allOrders);
+      renderRecentOrders();
+      renderAnalytics();
+      // Check for new orders that came in after first load
+      if (prev > 0) {
+        snap.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            const o = {id: change.doc.id, ...change.doc.data()};
+            const oName = o.customerName || o.userName || 'Customer';
+            const oTotal = (o.total||0).toLocaleString('en-IN');
+            // In-app notification
+            addNotif('🛒', `New order #${o.id.slice(-8)} — ₹${oTotal} from ${oName}`, true);
+            // Browser push notification
+            triggerBrowserNotif(`🛒 New SELLTHEAD Order!`, `₹${oTotal} from ${oName} — #${o.id.slice(-8)}`);
+          }
+        });
+      } else {
+        // First load — check for unread new orders
+        checkNewOrderNotifs();
+        // Request browser notification permission on first load
+        requestNotifPermission();
+      }
+    }, err => {
+      console.warn('Real-time orders failed, falling back to one-time fetch:', err.message);
+      db.collection('orders').get().then(snap => {
+        allOrders = snap.docs.map(d => ({id:d.id,...d.data()}));
+        allOrders.sort((a,b) => {
+          const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.date||0);
+          const db2= b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.date||0);
+          return db2-da;
+        });
+        renderOrderStats(); renderOrdersTable(allOrders); renderRecentOrders(); renderAnalytics(); checkNewOrderNotifs();
+      }).catch(e => console.error(e));
     });
-    renderOrderStats();
-    renderOrdersTable(allOrders);
-    renderRecentOrders();
-    renderAnalytics();
-    checkNewOrderNotifs();
-  } catch(e){ console.error(e); }
+}
+
+// ── Browser Push Notifications ──
+function requestNotifPermission(){
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function triggerBrowserNotif(title, body){
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  try {
+    const n = new Notification(title, {
+      body,
+      icon: '../images/logo_icon.png',
+      badge: '../images/logo_icon.png',
+      tag: 'sellthead-order-' + Date.now(),
+      requireInteraction: true   // stays visible until you dismiss it
+    });
+    n.onclick = () => { window.focus(); n.close(); };
+  } catch(e){}
 }
 
 function renderOrderStats(){
@@ -1008,11 +1063,30 @@ function openOrderModal(orderId){
       </div>
     </div>
     <div class="order-detail-section">
-      <div class="order-detail-label">Payment</div>
-      <div class="order-detail-grid">
+      <div class="order-detail-label">Payment & Pricing</div>
+      <div class="order-detail-grid" style="grid-template-columns:1fr 1fr">
         <div><div class="odg-label">Method</div><div class="odg-val">${o.paymentMethod||'UPI'}</div></div>
         <div><div class="odg-label">Status</div><div class="odg-val" style="color:var(--green)">${o.paymentStatus||'Paid'}</div></div>
+        <div><div class="odg-label">Subtotal (Original)</div><div class="odg-val">₹${(o.subtotal||o.total||0).toLocaleString('en-IN')}</div></div>
+        <div><div class="odg-label">Amount Paid</div><div class="odg-val" style="color:var(--red);font-weight:800">₹${(o.total||0).toLocaleString('en-IN')}</div></div>
       </div>
+      ${o.discountCode ? `
+      <div style="margin-top:.8rem;background:rgba(0,204,136,.08);border:1px solid rgba(0,204,136,.2);border-radius:10px;padding:.75rem 1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+          <div>
+            <div style="font-size:.7rem;color:var(--muted);letter-spacing:.08em;margin-bottom:2px">DISCOUNT CODE USED</div>
+            <div style="font-family:var(--font-disp);font-size:1.3rem;letter-spacing:3px;color:#00cc88">${o.discountCode}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:2px">DISCOUNT GIVEN</div>
+            <div style="font-size:1.1rem;font-weight:800;color:#00cc88">−${o.discountPercent||0}% (−₹${((o.subtotal||o.total||0)-(o.total||0)).toLocaleString('en-IN')})</div>
+          </div>
+        </div>
+        <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(0,204,136,.15);font-size:.78rem;color:var(--muted)">
+          💡 <strong style="color:#fff">${o.discountCode}</strong> = ${(()=>{const code=(o.discountCode||'').toUpperCase();if(code.includes('PRATIK'))return 'Pratik's code — pay 10% commission to <strong style="color:#00cc88">Pratik</strong>';if(code.includes('PRIYANSH'))return 'Priyansh's code — pay 10% commission to <strong style="color:#00cc88">Priyansh</strong>';if(code.includes('DISHANT'))return 'Dishant's code — pay 10% commission to <strong style="color:#00cc88">Dishant</strong>';if(code.includes('SAURABH'))return 'Saurabh's code — pay 10% commission to <strong style="color:#00cc88">Saurabh</strong>';if(code.includes('PRINCE'))return 'Prince's code — pay 10% commission to <strong style="color:#00cc88">Prince</strong>';if(code.includes('SAMAR'))return 'Samar's code — pay 10% commission to <strong style="color:#00cc88">Samar</strong>';return 'Collaborator code';})()}
+          &nbsp;→ Commission: <strong style="color:#ffd700">₹${Math.round((o.total||0)*((o.discountPercent||0)/100)).toLocaleString('en-IN')}</strong>
+        </div>
+      </div>` : '<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted)">No discount code used</div>'}
     </div>
     <div class="order-detail-section">
       <div class="order-detail-label">Order Progress</div>
@@ -1591,6 +1665,31 @@ function showToast(msg, type='success'){
   t.className = 'toast show '+type;
   clearTimeout(t._timer);
   t._timer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+<!-- Notification Permission Banner -->
+<div class="notif-allow-bar" id="notifAllowBar" style="display:none">
+  <span>🔔 <strong>Enable browser notifications</strong> to get alerted instantly when a new order arrives — even without keeping this tab open.</span>
+  <div style="display:flex;gap:.5rem">
+    <button onclick="enableBrowserNotifs()">ALLOW NOTIFICATIONS</button>
+    <button class="notif-bar-close" onclick="document.getElementById('notifAllowBar').style.display='none';localStorage.setItem('notifBarDismissed','1')">✕</button>
+  </div>
+</div>
+<script>
+// Show banner if permission not yet decided and not dismissed
+(function(){
+  if(!('Notification' in window)) return;
+  if(localStorage.getItem('notifBarDismissed')) return;
+  if(Notification.permission === 'default'){
+    setTimeout(()=>{ document.getElementById('notifAllowBar').style.display='flex'; }, 3000);
+  }
+})();
+function enableBrowserNotifs(){
+  Notification.requestPermission().then(p=>{
+    document.getElementById('notifAllowBar').style.display='none';
+    localStorage.setItem('notifBarDismissed','1');
+    if(p==='granted') addNotif('✅','Browser notifications enabled! You'll be alerted for new orders.',false);
+  });
 }
 </script>
 </body>
