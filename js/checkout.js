@@ -22,66 +22,45 @@
     localStorage.removeItem('sh_cart');
   }
 
-  // Discount codes loaded from Firestore (admin can activate/deactivate)
-  let DISCOUNT_CODES = {};
-  const FALLBACK_CODES = {
-    'PRATIK10':10,'PRIYANSH10':10,'DISHANT10':10,
-    'SAURABH10':10,'SAMAR10':10,'PRINCE10':10
+  // Live discount codes — loaded from Firestore discountCodes collection.
+  // Falls back to this static map only if Firestore is unreachable.
+  let LIVE_DISCOUNT_CODES = null; // null = not loaded yet, {} = loaded (possibly empty)
+  const FALLBACK_DISCOUNT_CODES = {
+    'PRATIK10':   10,
+    'PRIYANSH10': 10,
+    'DISHANT10':  10,
+    'SAURABH10':  10,
+    'SAMAR10':    10,
+    'PRINCE10':   10
   };
 
-  function loadDiscountCodes() {
-    if (!window.db) { setTimeout(loadDiscountCodes, 600); return; }
-    window.db.collection('discountCodes').get().then(snap => {
-      if (snap.empty) { DISCOUNT_CODES = FALLBACK_CODES; return; }
-      DISCOUNT_CODES = {};
-      snap.docs.forEach(d => {
-        const data = d.data();
-        const code = (data.code || d.id || '').toUpperCase();
-        // Only load ACTIVE codes — respect admin deactivation
-        if (code && data.active !== false) {
-          const pct = Number(data.discount || data.percent || 10);
-          DISCOUNT_CODES[code] = pct;
-        }
+  async function loadLiveDiscountCodes() {
+    try {
+      if (!window.db) { LIVE_DISCOUNT_CODES = { ...FALLBACK_DISCOUNT_CODES }; return; }
+      const snap = await window.db.collection('discountCodes').get();
+      const codes = {};
+      snap.forEach(doc => {
+        const data = doc.data() || {};
+        const activeVal = data.active;
+        const isActive = !(activeVal === false || activeVal === 'false' || activeVal === 0);
+        if (!isActive) return; // skip deactivated codes
+        const percent = Number(data.discount);
+        if (!isNaN(percent)) codes[doc.id.toUpperCase()] = percent;
       });
-      // If nothing loaded from Firestore, fallback
-      if (!Object.keys(DISCOUNT_CODES).length) DISCOUNT_CODES = FALLBACK_CODES;
-    }).catch(() => { DISCOUNT_CODES = FALLBACK_CODES; });
+      LIVE_DISCOUNT_CODES = codes;
+    } catch (e) {
+      LIVE_DISCOUNT_CODES = { ...FALLBACK_DISCOUNT_CODES };
+    }
   }
 
   // ── Init ─────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    loadDiscountCodes(); // load live codes from Firestore
-    syncPricesThenRender(); // sync prices from Firestore, then render
+    renderCheckoutItems();
     initStepButtons();
     initDiscountCode();
+    loadLiveDiscountCodes();
     Auth.handleRedirectResult && Auth.handleRedirectResult();
   });
-
-  // Sync cart prices from Firestore once on load, then render
-  function syncPricesThenRender() {
-    function doRender() { renderCheckoutItems(); updateOrderTotal(getCartSubtotal()); }
-    if (!window.db) { doRender(); return; }
-    window.db.collection('products').get().then(snap => {
-      if (snap.empty) { doRender(); return; }
-      const items = getCart();
-      let updated = false;
-      snap.docs.forEach(d => {
-        const fs = d.data();
-        const fsId = String(fs.id !== undefined ? fs.id : d.id);
-        items.forEach((item, idx) => {
-          if (String(item.id) === fsId && fs.price !== undefined && Number(fs.price) !== Number(item.price)) {
-            items[idx] = { ...item, price: Number(fs.price) };
-            updated = true;
-          }
-        });
-      });
-      if (updated) {
-        try { localStorage.setItem('sh_cart', JSON.stringify(items)); } catch(e) {}
-        if (typeof Cart !== 'undefined') { Cart.items = items; Cart.render(); }
-      }
-      doRender();
-    }).catch(() => doRender());
-  }
 
   // ── Cart Items Display ───────────────────────────────────
   function renderCheckoutItems() {
@@ -178,7 +157,7 @@
     const discountInput = document.getElementById('discountCodeInput');
     if (!applyBtn || !discountInput) return;
 
-    applyBtn.addEventListener('click', () => {
+    applyBtn.addEventListener('click', async () => {
       const code = discountInput.value.trim().toUpperCase();
       const msgEl = document.getElementById('discountMsg');
 
@@ -192,8 +171,19 @@
         return;
       }
 
-      if (DISCOUNT_CODES[code] !== undefined) {
-        const percent = DISCOUNT_CODES[code];
+      if (LIVE_DISCOUNT_CODES === null) {
+        applyBtn.disabled = true;
+        const prevText = applyBtn.textContent;
+        applyBtn.textContent = 'Checking...';
+        await loadLiveDiscountCodes();
+        applyBtn.disabled = false;
+        applyBtn.textContent = prevText;
+      }
+
+      const codes = LIVE_DISCOUNT_CODES || FALLBACK_DISCOUNT_CODES;
+
+      if (codes[code] !== undefined) {
+        const percent = codes[code];
         appliedDiscount = { code, percent };
         discountApplied = true;
 
@@ -341,51 +331,21 @@
     const subtotal = getCartSubtotal();
     const finalTotal = updateOrderTotal(subtotal);
 
-    // Get logged-in user info to save with order
-    const userName = user
-      ? (user.displayName || (user.email ? user.email.split('@')[0] : 'Customer'))
-      : (orderData.customerName || 'Guest');
-    const userEmail = user ? user.email : (orderData.email || '');
-    // Build items with BOTH `name` and `title` so admin and orders page both work
-    const orderItems = cart.map(i => ({
-      id:    i.id,
-      name:  i.name  || i.title || 'Product',
-      title: i.title || i.name  || 'Product',
-      image: i.image || '',
-      price: Number(i.price),
-      qty:   Number(i.qty) || 1,
-      size:  i.size || 'One Size'
-    }));
-    const nowDate = new Date().toISOString(); // plain date string for admin/orders compatibility
     const order = {
       ...orderData,
-      // User identity
-      userId:       user ? user.uid : 'guest',
-      userName:     userName,
-      userEmail:    userEmail,
-      customerName: orderData.customerName || userName,
-      email:        orderData.email        || userEmail,
-      phone:        orderData.phone        || '',
-      // Address — save as both `address` string AND `delivery` object
-      address: orderData.address || '',
-      delivery: {
-        fname:   (orderData.customerName || userName).split(' ')[0] || '',
-        lname:   (orderData.customerName || userName).split(' ').slice(1).join(' ') || '',
-        address: orderData.address || '',
-        phone:   orderData.phone   || '',
-        email:   orderData.email   || userEmail
-      },
-      // Items with both field names
-      items: orderItems,
-      // Pricing
-      subtotal:       subtotal,
-      discountCode:   appliedDiscount ? appliedDiscount.code    : null,
-      discountPercent:appliedDiscount ? appliedDiscount.percent : 0,
+      userId: user ? user.uid : 'guest',
+      items: cart.map(i => ({
+        id: i.id,
+        name: i.name || i.title,
+        price: Number(i.price),
+        qty: Number(i.qty) || 1,
+        size: i.size || ''
+      })),
+      subtotal: subtotal,
+      discountCode: appliedDiscount ? appliedDiscount.code : null,
+      discountPercent: appliedDiscount ? appliedDiscount.percent : 0,
       total: finalTotal,
-      // Status
       status: 'pending',
-      // Date — save as BOTH Firestore timestamp AND plain ISO string
-      date:      nowDate,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
@@ -406,12 +366,9 @@
   };
 
   function sendWhatsAppNotification(order, orderId) {
-    const itemList = order.items.map(i => `• ${i.name||i.title} (${i.size || 'N/A'}) x${i.qty} = ₹${(i.price * i.qty).toLocaleString('en-IN')}`).join('\n');
-    const discountAmt = order.discountCode ? ((order.subtotal||order.total) - order.total) : 0;
-    const discountLine = order.discountCode
-      ? `\n🎟️ Code: *${order.discountCode}* (${order.discountPercent}% off, −₹${discountAmt.toLocaleString('en-IN')})\n💼 Commission due: ₹${Math.round(order.total * order.discountPercent / 100).toLocaleString('en-IN')}`
-      : '\n(No discount code)';
-    const msg = `🛒 *NEW ORDER — SELLTHEAD*\n\nOrder ID: ${orderId.slice(0,10)}\nCustomer: ${order.customerName}\nPhone: ${order.phone}\nEmail: ${order.email}\nAddress: ${order.address}\n\nItems:\n${itemList}${discountLine}\n\n*Original: ₹${(order.subtotal||order.total).toLocaleString('en-IN')}*\n*Total Paid: ₹${order.total.toLocaleString('en-IN')}*\n\nStatus: PENDING ⏳`;
+    const itemList = order.items.map(i => `• ${i.name} (${i.size || 'N/A'}) x${i.qty} = ₹${i.price * i.qty}`).join('\n');
+    const discount = order.discountCode ? `\nDiscount (${order.discountCode}): -${order.discountPercent}%` : '';
+    const msg = `🛒 *NEW ORDER — SELLTHEAD*\n\nOrder ID: ${orderId.slice(0,10)}\nCustomer: ${order.customerName}\nPhone: ${order.phone}\nEmail: ${order.email}\nAddress: ${order.address}\n\nItems:\n${itemList}${discount}\n\n*Total: ₹${order.total}*\n\nStatus: PENDING`;
     const waUrl = `https://wa.me/917568521210?text=${encodeURIComponent(msg)}`;
     window.open(waUrl, '_blank');
   }
