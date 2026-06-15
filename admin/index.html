@@ -5,59 +5,63 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Admin — SELLTHEAD</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=Montserrat:wght@400;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Dancing+Script:wght@600;700&display=swap');
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --red:#e81c1c;--red2:rgba(232,28,28,.12);--bg:#060409;
-      --panel:rgba(255,255,255,.035);--panel2:rgba(255,255,255,.06);
-      --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
-      --text:#eeeef8;--muted:#7878a0;--green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;--purple:#a855f7;
-      --font:'Barlow',sans-serif;--font-cond:'Barlow Condensed',sans-serif;--font-disp:'Bebas Neue',sans-serif;--font-m:'Montserrat',sans-serif;
-      --radius-card:18px; --glass-bg:rgba(255,255,255,.03); --glass-border:rgba(255,255,255,.08);
+      --red:#D62B2B;--red2:rgba(214,43,43,.10);--bg:#FAF7F2;
+      --panel:#ffffff;--panel2:#fff8f0;
+      --border:#eee0d2;--border2:#e8d8c8;
+      --text:#2b2420;--muted:#9c8f82;--green:#1ea15a;--amber:#d98e1c;--blue:#3b6fd6;--purple:#9d5fd6;
+      --gold:#FFC107;
+      --font:'Poppins',sans-serif;--font-cond:'Oswald',sans-serif;--font-disp:'Oswald',sans-serif;--font-m:'Poppins',sans-serif;--font-script:'Dancing Script',cursive;
+      --radius-card:14px; --glass-bg:#ffffff; --glass-border:#eee0d2;
+      --sh:0 2px 14px rgba(60,40,20,.06); --shl:0 8px 30px rgba(60,40,20,.10);
     }
-    body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;
-      background-image: radial-gradient(ellipse at 20% 10%, rgba(232,28,28,.04) 0%, transparent 50%),
-                        radial-gradient(ellipse at 80% 80%, rgba(100,20,200,.03) 0%, transparent 50%);
-    }
+    body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
 
     /* ── LOGIN ── */
-    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;background:radial-gradient(ellipse at center,rgba(232,28,28,.07) 0%,transparent 70%)}
-    .login-box{background:linear-gradient(145deg,rgba(14,9,26,.97),rgba(8,5,16,.99));border:1px solid rgba(232,28,28,.2);border-radius:20px;padding:2.5rem;width:100%;max-width:400px;box-shadow:0 0 80px rgba(232,28,28,.12)}
-    .login-logo{font-family:var(--font-disp);font-size:2.2rem;letter-spacing:3px;text-align:center;margin-bottom:.3rem}
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;background:linear-gradient(160deg,#FAF7F2 0%,#FCEFE5 100%)}
+    .login-box{background:#fff;border:1px solid var(--border);border-radius:18px;padding:2.5rem;width:100%;max-width:400px;box-shadow:var(--shl)}
+    .login-logo{font-family:var(--font-script);font-size:2.6rem;letter-spacing:1px;text-align:center;margin-bottom:.3rem;color:var(--text)}
     .login-logo span{color:var(--red)}
-    .login-sub{color:var(--muted);text-align:center;font-size:.83rem;margin-bottom:2rem;letter-spacing:.05em}
-    .fi{display:block;width:100%;margin-bottom:.85rem;padding:.85rem 1rem;background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--text);border-radius:10px;font-family:var(--font);font-size:.9rem}
-    .fi:focus{outline:none;border-color:rgba(232,28,28,.6);box-shadow:0 0 0 3px rgba(232,28,28,.1)}
-    .fi::placeholder{color:rgba(160,160,192,.45)}
-    .btn-red{width:100%;padding:.88rem;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:var(--font-cond);font-size:.95rem;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:background .2s}
-    .btn-red:hover{background:#b01010}
-    .err{color:#e74c3c;font-size:.82rem;text-align:center;margin-top:.6rem;min-height:1.2em}
+    .login-sub{color:var(--muted);text-align:center;font-size:.8rem;margin-bottom:2rem;letter-spacing:.12em;font-family:var(--font-cond);text-transform:uppercase}
+    .fi{display:block;width:100%;margin-bottom:.85rem;padding:.85rem 1rem;background:#FAF7F2;border:1px solid var(--border2);color:var(--text);border-radius:10px;font-family:var(--font);font-size:.9rem}
+    .fi:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(214,43,43,.10)}
+    .fi::placeholder{color:var(--muted)}
+    .btn-red{width:100%;padding:.88rem;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:var(--font-cond);font-size:.95rem;font-weight:600;letter-spacing:1.5px;cursor:pointer;transition:background .2s;box-shadow:0 4px 16px rgba(214,43,43,.25)}
+    .btn-red:hover{background:#B71C1C}
+    .err{color:#c0392b;font-size:.82rem;text-align:center;margin-top:.6rem;min-height:1.2em}
+    .btn-google-admin{width:100%;padding:.8rem;background:#fff;border:1px solid var(--border2);color:var(--text);border-radius:10px;font-family:var(--font);font-size:.85rem;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:all .2s}
+    .btn-google-admin:hover{background:var(--panel2);border-color:var(--border)}
 
     /* ── LAYOUT ── */
     .dash{display:none;flex-direction:row;min-height:100vh}
-    .sidebar{width:230px;flex-shrink:0;background:rgba(6,4,14,.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-    .sb-logo{padding:1.4rem 1.2rem 1rem;border-bottom:1px solid var(--border);font-family:var(--font-disp);font-size:1.35rem;letter-spacing:3px}
+    .sidebar{width:230px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .sb-logo{padding:1.5rem 1.2rem 1.1rem;border-bottom:1px solid var(--border);font-family:var(--font-script);font-size:1.7rem;letter-spacing:1px;color:var(--text)}
     .sb-logo span{color:var(--red)}
-    .sb-logo small{display:block;font-family:var(--font-cond);font-size:.65rem;letter-spacing:3px;color:var(--muted);margin-top:.2rem}
-    .sb-nav{padding:.8rem 0;flex:1}
-    .sb-section{font-family:var(--font-cond);font-size:.62rem;font-weight:700;letter-spacing:2px;color:var(--muted);padding:.6rem 1.2rem .3rem;text-transform:uppercase}
-    .sb-item{display:flex;align-items:center;gap:.65rem;padding:.65rem 1.2rem;font-family:var(--font-cond);font-size:.82rem;font-weight:600;letter-spacing:.5px;color:rgba(255,255,255,.65);cursor:pointer;transition:all .2s;border-left:2px solid transparent;user-select:none}
-    .sb-item:hover{color:var(--text);background:var(--panel)}
-    .sb-item.active{color:var(--text);background:rgba(232,28,28,.1);border-left-color:var(--red)}
+    .sb-logo small{display:block;font-family:var(--font-cond);font-size:.62rem;letter-spacing:3px;color:var(--muted);margin-top:.25rem;text-transform:uppercase}
+    .sb-nav{padding:1rem 0;flex:1}
+    .sb-section{font-family:var(--font-cond);font-size:.62rem;font-weight:600;letter-spacing:2px;color:var(--muted);padding:.9rem 1.2rem .35rem;text-transform:uppercase}
+    .sb-item{display:flex;align-items:center;gap:.7rem;padding:.65rem 1.2rem;font-family:var(--font-cond);font-size:.85rem;font-weight:500;letter-spacing:.5px;color:#7a6f64;cursor:pointer;transition:all .2s;border-left:3px solid transparent;user-select:none}
+    .sb-item:hover{color:var(--text);background:var(--panel2)}
+    .sb-item.active{color:var(--red);background:var(--red2);border-left-color:var(--red);font-weight:600}
     .sb-item .ico{font-size:1rem;width:18px;text-align:center}
-    .sb-badge{margin-left:auto;background:var(--red);color:#fff;border-radius:20px;padding:.1rem .45rem;font-size:.62rem;font-weight:800;font-family:var(--font-m)}
+    .sb-badge{margin-left:auto;background:var(--red);color:#fff;border-radius:20px;padding:.1rem .45rem;font-size:.62rem;font-weight:700;font-family:var(--font-m)}
     .sb-foot{padding:1rem 1.2rem;border-top:1px solid var(--border)}
-    .btn-logout{width:100%;padding:.6rem;background:rgba(232,28,28,.12);border:1px solid rgba(232,28,28,.25);color:var(--red);border-radius:8px;font-family:var(--font-cond);font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s}
+    .btn-logout{width:100%;padding:.6rem;background:var(--red2);border:1px solid rgba(214,43,43,.25);color:var(--red);border-radius:8px;font-family:var(--font-cond);font-size:.78rem;font-weight:600;cursor:pointer;letter-spacing:1px;transition:all .2s}
     .btn-logout:hover{background:var(--red);color:#fff}
     .admin-name{font-size:.75rem;color:var(--muted);margin-bottom:.5rem;text-align:center}
 
     /* ── MAIN ── */
     .main{flex:1;min-width:0;display:flex;flex-direction:column}
-    .topbar{background:rgba(6,4,14,.5);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-bottom:1px solid rgba(255,255,255,.07);padding:.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:9;box-shadow:0 2px 20px rgba(0,0,0,.3)}
-    .page-title{font-family:var(--font-disp);font-size:1.35rem;letter-spacing:2px}
+    .topbar{background:#fff;border-bottom:1px solid var(--border);padding:1rem 1.8rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:9;box-shadow:var(--sh)}
+    .page-title{font-family:var(--font-cond);font-size:1.3rem;letter-spacing:2px;font-weight:600;text-transform:uppercase}
     .page-title span{color:var(--red)}
     .topbar-right{display:flex;align-items:center;gap:.8rem}
-    .notif-bell{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:.45rem .6rem;cursor:pointer;position:relative;font-size:.95rem}
+    .notif-bell{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:.45rem .6rem;cursor:pointer;position:relative;font-size:.95rem}
+  .notif-allow-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border2);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;z-index:9999;font-size:.85rem;color:#946200;box-shadow:0 -4px 20px rgba(60,40,20,.08)}
+  .notif-allow-bar button{background:var(--red);border:none;color:#fff;padding:.4rem 1.1rem;border-radius:8px;font-family:var(--font-cond);font-weight:600;font-size:.8rem;letter-spacing:.05em;cursor:pointer;white-space:nowrap}
+  .notif-allow-bar .notif-bar-close{background:transparent;color:var(--muted);padding:.4rem .6rem}
     .notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--red);border-radius:50%;display:none}
     .notif-dot.show{display:block}
     .content{padding:1.6rem;flex:1;overflow-y:auto}
@@ -69,130 +73,129 @@
     /* ── STATS GRID ── */
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.8rem}
     .stat-card{
-      background:linear-gradient(145deg,rgba(18,12,30,.85),rgba(10,8,20,.9));
-      border:1px solid rgba(255,255,255,.07);
+      background:#fff;
+      border:1px solid var(--border);
       border-radius:var(--radius-card);padding:1.3rem;
       transition:border-color .3s,transform .25s,box-shadow .3s;cursor:default;
-      box-shadow:0 4px 6px rgba(0,0,0,.2),0 10px 24px rgba(0,0,0,.3),0 1px 0 rgba(255,255,255,.05) inset;
+      box-shadow:var(--sh);
     }
-    .stat-card:hover{border-color:rgba(232,28,28,.25);transform:translateY(-3px);
-      box-shadow:0 6px 12px rgba(0,0,0,.25),0 18px 40px rgba(0,0,0,.35),0 0 20px rgba(232,28,28,.05),0 1px 0 rgba(255,255,255,.06) inset;}
+    .stat-card:hover{border-color:rgba(214,43,43,.25);transform:translateY(-3px);box-shadow:var(--shl)}
     .stat-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.6rem}
-    .stat-ico{font-size:1.4rem}
-    .stat-label{font-family:var(--font-cond);font-size:.68rem;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
-    .stat-val{font-family:var(--font-disp);font-size:2rem;letter-spacing:1px}
+    .stat-ico{font-size:1.3rem;width:38px;height:38px;border-radius:10px;background:var(--red2);display:flex;align-items:center;justify-content:center}
+    .stat-label{font-family:var(--font-cond);font-size:.68rem;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+    .stat-val{font-family:var(--font-cond);font-size:2rem;letter-spacing:1px;font-weight:600}
     .stat-sub{font-size:.72rem;color:var(--muted);margin-top:.25rem}
 
     /* ── SECTION HEADER ── */
     .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.7rem}
-    .sec-title{font-family:var(--font-disp);font-size:1.25rem;letter-spacing:2px}
+    .sec-title{font-family:var(--font-cond);font-size:1.25rem;letter-spacing:2px;font-weight:600;text-transform:uppercase}
     .sec-title span{color:var(--red)}
     .sec-actions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
 
     /* ── BUTTONS ── */
-    .btn{padding:.55rem 1.1rem;border-radius:8px;font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.8px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase}
-    .btn-primary{background:var(--red);color:#fff}
-    .btn-primary:hover{background:#b01010}
-    .btn-ghost{background:var(--panel);border:1px solid var(--border2);color:var(--text)}
-    .btn-ghost:hover{background:var(--panel2)}
-    .btn-green{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
-    .btn-green:hover{background:rgba(34,197,94,.25)}
-    .btn-amber{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber)}
-    .btn-danger{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444}
-    .btn-danger:hover{background:rgba(239,68,68,.25)}
+    .btn{padding:.55rem 1.1rem;border-radius:8px;font-family:var(--font-cond);font-size:.8rem;font-weight:600;letter-spacing:.8px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase}
+    .btn-primary{background:var(--red);color:#fff;box-shadow:0 4px 14px rgba(214,43,43,.25)}
+    .btn-primary:hover{background:#B71C1C}
+    .btn-ghost{background:var(--panel2);border:1px solid var(--border2);color:var(--text)}
+    .btn-ghost:hover{background:var(--border)}
+    .btn-green{background:rgba(30,161,90,.10);border:1px solid rgba(30,161,90,.3);color:var(--green)}
+    .btn-green:hover{background:rgba(30,161,90,.2)}
+    .btn-amber{background:rgba(217,142,28,.10);border:1px solid rgba(217,142,28,.3);color:var(--amber)}
+    .btn-danger{background:rgba(214,43,43,.10);border:1px solid rgba(214,43,43,.3);color:var(--red)}
+    .btn-danger:hover{background:rgba(214,43,43,.2)}
     .btn-sm{padding:.35rem .75rem;font-size:.72rem}
     .btn-icon{padding:.4rem .6rem;font-size:.85rem}
 
     /* ── CARD ── */
-    .card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius-card);overflow:hidden}
+    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;box-shadow:var(--sh)}
     .card-body{padding:1.2rem}
 
     /* ── TABLE ── */
-    .table-wrap{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius-card);overflow:hidden;backdrop-filter:blur(4px)}
+    .table-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;box-shadow:var(--sh)}
     table{width:100%;border-collapse:collapse}
-    thead tr{background:rgba(255,255,255,.04);border-bottom:1px solid var(--border)}
-    th{font-family:var(--font-cond);font-size:.68rem;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding:.85rem 1rem;text-align:left;white-space:nowrap}
-    tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+    thead tr{background:var(--panel2);border-bottom:1px solid var(--border)}
+    th{font-family:var(--font-cond);font-size:.68rem;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding:.85rem 1rem;text-align:left;white-space:nowrap}
+    tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
     tbody tr:last-child{border-bottom:none}
-    tbody tr:hover{background:rgba(255,255,255,.03)}
+    tbody tr:hover{background:var(--panel2)}
     td{padding:.8rem 1rem;font-size:.83rem;color:var(--text);vertical-align:middle}
     .cell-muted{color:var(--muted);font-size:.76rem}
-    .cell-bold{font-family:var(--font-cond);font-weight:700}
-    .cell-red{color:var(--red);font-family:var(--font-cond);font-weight:700}
+    .cell-bold{font-family:var(--font-cond);font-weight:600}
+    .cell-red{color:var(--red);font-family:var(--font-cond);font-weight:600}
 
     /* ── STATUS BADGES ── */
-    .badge{display:inline-block;padding:.22rem .65rem;border-radius:20px;font-family:var(--font-cond);font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap}
+    .badge{display:inline-block;padding:.22rem .65rem;border-radius:20px;font-family:var(--font-cond);font-size:.7rem;font-weight:600;letter-spacing:.5px;white-space:nowrap}
 
     /* ── SEARCH & FILTER BAR ── */
     .filter-bar{display:flex;gap:.7rem;margin-bottom:1.1rem;flex-wrap:wrap;align-items:center}
-    .search-input{padding:.6rem 1rem;background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:8px;font-family:var(--font);font-size:.83rem;min-width:220px}
-    .search-input:focus{outline:none;border-color:rgba(232,28,28,.5)}
+    .search-input{padding:.6rem 1rem;background:#fff;border:1px solid var(--border2);color:var(--text);border-radius:8px;font-family:var(--font);font-size:.83rem;min-width:220px}
+    .search-input:focus{outline:none;border-color:var(--red)}
     .search-input::placeholder{color:var(--muted)}
-    .filter-select{padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:8px;font-family:var(--font-cond);font-size:.8rem;cursor:pointer}
-    .filter-select:focus{outline:none;border-color:rgba(232,28,28,.5)}
+    .filter-select{padding:.6rem .9rem;background:#fff;border:1px solid var(--border2);color:var(--text);border-radius:8px;font-family:var(--font-cond);font-size:.8rem;cursor:pointer}
+    .filter-select:focus{outline:none;border-color:var(--red)}
 
     /* ── STATUS SELECT ── */
-    .status-select{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--text);padding:.32rem .6rem;border-radius:6px;font-family:var(--font-cond);font-size:.75rem;cursor:pointer}
-    .status-select:focus{outline:none;border-color:rgba(232,28,28,.5)}
+    .status-select{background:#fff;border:1px solid var(--border2);color:var(--text);padding:.32rem .6rem;border-radius:6px;font-family:var(--font-cond);font-size:.75rem;cursor:pointer}
+    .status-select:focus{outline:none;border-color:var(--red)}
 
     /* ── MODAL ── */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;padding:1rem}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(43,36,32,.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
     .modal-overlay.open{display:flex}
-    .modal{background:rgba(12,8,24,.95);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:22px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;padding:0;box-shadow:0 0 80px rgba(232,28,28,.08),0 40px 80px rgba(0,0,0,.6)}
-    .modal-head{padding:1.3rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(10,8,20,.98);border-radius:18px 18px 0 0;z-index:1}
-    .modal-title{font-family:var(--font-disp);font-size:1.1rem;letter-spacing:2px}
+    .modal{background:#fff;border:1px solid var(--border);border-radius:18px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;padding:0;box-shadow:0 20px 80px rgba(43,36,32,.25)}
+    .modal-head{padding:1.3rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:18px 18px 0 0;z-index:1}
+    .modal-title{font-family:var(--font-cond);font-size:1.1rem;letter-spacing:2px;font-weight:600;text-transform:uppercase}
     .modal-close{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:.2rem;transition:color .2s}
     .modal-close:hover{color:var(--text)}
     .modal-body{padding:1.4rem 1.5rem}
     .modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.7rem}
     .form-row{margin-bottom:1rem}
-    .form-label{display:block;font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-bottom:.4rem}
-    .form-ctrl{display:block;width:100%;padding:.75rem 1rem;background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--text);border-radius:8px;font-family:var(--font);font-size:.88rem;transition:border-color .2s}
-    .form-ctrl:focus{outline:none;border-color:rgba(232,28,28,.5);box-shadow:0 0 0 3px rgba(232,28,28,.08)}
-    .form-ctrl::placeholder{color:rgba(160,160,192,.4)}
+    .form-label{display:block;font-family:var(--font-cond);font-size:.75rem;font-weight:600;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-bottom:.4rem}
+    .form-ctrl{display:block;width:100%;padding:.75rem 1rem;background:#FAF7F2;border:1px solid var(--border2);color:var(--text);border-radius:8px;font-family:var(--font);font-size:.88rem;transition:border-color .2s}
+    .form-ctrl:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(214,43,43,.08)}
+    .form-ctrl::placeholder{color:var(--muted)}
     .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
     textarea.form-ctrl{resize:vertical;min-height:100px}
 
     /* ── PRODUCT CARDS (admin) ── */
     .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.1rem}
-    .prod-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s,transform .2s}
-    .prod-card:hover{border-color:rgba(232,28,28,.3);transform:translateY(-3px)}
-    .prod-card-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:rgba(255,255,255,.03);display:block}
+    .prod-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s,transform .2s,box-shadow .2s;box-shadow:var(--sh)}
+    .prod-card:hover{border-color:rgba(214,43,43,.3);transform:translateY(-3px);box-shadow:var(--shl)}
+    .prod-card-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--panel2);display:block}
     .prod-card-body{padding:.9rem}
-    .prod-card-title{font-family:var(--font-m);font-size:.82rem;font-weight:700;margin-bottom:.3rem;line-height:1.3}
-    .prod-card-price{color:var(--red);font-family:var(--font-cond);font-weight:700;font-size:.95rem}
+    .prod-card-title{font-family:var(--font-m);font-size:.82rem;font-weight:600;margin-bottom:.3rem;line-height:1.3}
+    .prod-card-price{color:var(--red);font-family:var(--font-cond);font-weight:600;font-size:.95rem}
     .prod-card-old{color:var(--muted);text-decoration:line-through;font-size:.78rem;margin-left:.4rem}
     .prod-card-actions{display:flex;gap:.5rem;margin-top:.7rem}
-    .stock-badge{display:inline-block;padding:.15rem .55rem;border-radius:20px;font-size:.65rem;font-weight:700;font-family:var(--font-cond);letter-spacing:.5px;margin-top:.3rem}
+    .stock-badge{display:inline-block;padding:.15rem .55rem;border-radius:20px;font-size:.65rem;font-weight:600;font-family:var(--font-cond);letter-spacing:.5px;margin-top:.3rem}
 
     /* ── COUPON CARDS ── */
     .coupon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
-    .coupon-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.1rem;display:flex;flex-direction:column;gap:.5rem;transition:border-color .2s}
-    .coupon-card:hover{border-color:rgba(232,28,28,.3)}
-    .coupon-code{font-family:var(--font-disp);font-size:1.4rem;letter-spacing:3px;color:var(--red)}
+    .coupon-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.1rem;display:flex;flex-direction:column;gap:.5rem;transition:border-color .2s;box-shadow:var(--sh)}
+    .coupon-card:hover{border-color:rgba(214,43,43,.3)}
+    .coupon-code{font-family:var(--font-cond);font-size:1.4rem;letter-spacing:3px;color:var(--red);font-weight:600}
     .coupon-meta{font-size:.78rem;color:var(--muted)}
-    .coupon-disc{font-family:var(--font-cond);font-weight:700;font-size:1rem;color:var(--green)}
+    .coupon-disc{font-family:var(--font-cond);font-weight:600;font-size:1rem;color:var(--green)}
     .coupon-actions{display:flex;gap:.5rem;margin-top:.4rem}
 
     /* ── CUSTOMER LIST ── */
-    .cust-avatar{width:34px;height:34px;border-radius:50%;background:var(--red2);border:1px solid rgba(232,28,28,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.85rem;font-weight:800;color:var(--red);flex-shrink:0}
+    .cust-avatar{width:34px;height:34px;border-radius:50%;background:var(--red2);border:1px solid rgba(214,43,43,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.85rem;font-weight:700;color:var(--red);flex-shrink:0}
 
     /* ── LOG LIST ── */
-    .log-item{padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:.8rem;align-items:flex-start}
+    .log-item{padding:.7rem 0;border-bottom:1px solid var(--border);display:flex;gap:.8rem;align-items:flex-start}
     .log-item:last-child{border-bottom:none}
     .log-ico{font-size:1rem;flex-shrink:0;margin-top:.1rem}
     .log-text{font-size:.82rem;flex:1;line-height:1.45}
     .log-time{font-size:.72rem;color:var(--muted);white-space:nowrap}
 
     /* ── NOTIF PANEL ── */
-    .notif-panel{position:fixed;top:58px;right:1rem;width:320px;background:linear-gradient(145deg,rgba(16,12,30,.98),rgba(10,8,20,.99));border:1px solid var(--border2);border-radius:14px;z-index:200;box-shadow:0 20px 60px rgba(0,0,0,.6);display:none}
+    .notif-panel{position:fixed;top:64px;right:1rem;width:320px;background:#fff;border:1px solid var(--border2);border-radius:14px;z-index:200;box-shadow:var(--shl);display:none}
     .notif-panel.open{display:block}
     .notif-head{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-    .notif-title{font-family:var(--font-cond);font-size:.85rem;font-weight:700;letter-spacing:1px}
+    .notif-title{font-family:var(--font-cond);font-size:.85rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}
     .notif-list{max-height:360px;overflow-y:auto}
-    .notif-item{padding:.8rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:.7rem;align-items:flex-start;cursor:pointer;transition:background .15s}
-    .notif-item:hover{background:var(--panel)}
-    .notif-item.unread{background:rgba(232,28,28,.05)}
+    .notif-item{padding:.8rem 1.1rem;border-bottom:1px solid var(--border);display:flex;gap:.7rem;align-items:flex-start;cursor:pointer;transition:background .15s}
+    .notif-item:hover{background:var(--panel2)}
+    .notif-item.unread{background:var(--red2)}
     .notif-item-ico{font-size:1.1rem;flex-shrink:0}
     .notif-item-body{flex:1}
     .notif-item-text{font-size:.8rem;line-height:1.4}
@@ -202,53 +205,53 @@
     /* ── ORDER DETAIL MODAL ── */
     .order-detail-section{margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
     .order-detail-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-    .order-detail-label{font-family:var(--font-cond);font-size:.68rem;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem}
+    .order-detail-label{font-family:var(--font-cond);font-size:.68rem;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem}
     .order-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem}
     .odg-label{font-size:.72rem;color:var(--muted)}
     .odg-val{font-size:.85rem;font-weight:600}
-    .order-item-row{display:flex;align-items:center;gap:.8rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .order-item-row{display:flex;align-items:center;gap:.8rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
     .order-item-row:last-child{border-bottom:none}
-    .order-item-img{width:44px;height:44px;object-fit:cover;border-radius:8px;background:rgba(255,255,255,.04)}
+    .order-item-img{width:44px;height:44px;object-fit:cover;border-radius:8px;background:var(--panel2)}
     .order-item-name{font-size:.83rem;font-weight:600;margin-bottom:.15rem}
     .order-item-sub{font-size:.72rem;color:var(--muted)}
 
     /* ── TRACK PROGRESS (customer) ── */
     .track-steps{display:flex;align-items:center;gap:0;margin:.8rem 0}
     .track-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
-    .track-step::before{content:'';position:absolute;left:-50%;right:50%;top:12px;height:2px;background:rgba(255,255,255,.1);z-index:0}
+    .track-step::before{content:'';position:absolute;left:-50%;right:50%;top:12px;height:2px;background:var(--border2);z-index:0}
     .track-step:first-child::before{display:none}
-    .track-dot{width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.15);background:transparent;z-index:1;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .3s}
+    .track-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);background:transparent;z-index:1;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .3s}
     .track-step.done .track-dot{background:var(--green);border-color:var(--green);color:#fff}
-    .track-step.active .track-dot{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 10px rgba(232,28,28,.4)}
+    .track-step.active .track-dot{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 10px rgba(214,43,43,.35)}
     .track-step.done::before,.track-step.active::before{background:var(--green)}
-    .track-step-label{font-size:.6rem;font-family:var(--font-cond);font-weight:700;letter-spacing:.5px;color:var(--muted);margin-top:.3rem;text-align:center}
+    .track-step-label{font-size:.6rem;font-family:var(--font-cond);font-weight:600;letter-spacing:.5px;color:var(--muted);margin-top:.3rem;text-align:center}
     .track-step.done .track-step-label,.track-step.active .track-step-label{color:var(--text)}
 
     /* ── CHARTS ── */
-    .chart-wrap{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.2rem}
-    .chart-title{font-family:var(--font-cond);font-size:.78rem;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:.8rem}
+    .chart-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.2rem;box-shadow:var(--sh)}
+    .chart-title{font-family:var(--font-cond);font-size:.78rem;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:.8rem}
     .bar-chart{display:flex;align-items:flex-end;gap:.4rem;height:100px}
-    .bar{flex:1;background:rgba(232,28,28,.2);border-radius:4px 4px 0 0;transition:background .2s;cursor:default;position:relative;min-width:0}
-    .bar:hover{background:rgba(232,28,28,.5)}
+    .bar{flex:1;background:rgba(214,43,43,.18);border-radius:4px 4px 0 0;transition:background .2s;cursor:default;position:relative;min-width:0}
+    .bar:hover{background:rgba(214,43,43,.45)}
     .bar-label{font-size:.58rem;color:var(--muted);text-align:center;margin-top:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.4rem}
 
     /* ── SETTINGS ── */
     .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .settings-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.3rem}
-    .settings-card-title{font-family:var(--font-cond);font-size:.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem;color:var(--text)}
+    .settings-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.3rem;box-shadow:var(--sh)}
+    .settings-card-title{font-family:var(--font-cond);font-size:.82rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem;color:var(--text)}
 
     /* ── WA BUTTON ── */
-    .wa-btn{display:inline-flex;align-items:center;gap:.3rem;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.22);color:#25d366;padding:.32rem .65rem;border-radius:6px;font-family:var(--font-cond);font-size:.7rem;font-weight:700;text-decoration:none;transition:all .2s;white-space:nowrap}
+    .wa-btn{display:inline-flex;align-items:center;gap:.3rem;background:rgba(37,211,102,.10);border:1px solid rgba(37,211,102,.25);color:#1d9c52;padding:.32rem .65rem;border-radius:6px;font-family:var(--font-cond);font-size:.7rem;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
     .wa-btn:hover{background:rgba(37,211,102,.22)}
 
     /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar{width:6px;height:6px}
     ::-webkit-scrollbar-track{background:transparent}
-    ::-webkit-scrollbar-thumb{background:rgba(232,28,28,.25);border-radius:4px}
+    ::-webkit-scrollbar-thumb{background:rgba(214,43,43,.25);border-radius:4px}
 
     /* ── TOAST ── */
-    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:linear-gradient(135deg,rgba(20,16,34,.98),rgba(12,10,22,.99));border:1px solid var(--border2);border-radius:12px;padding:.9rem 1.3rem;font-size:.85rem;z-index:500;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#fff;border:1px solid var(--border2);border-radius:12px;padding:.9rem 1.3rem;font-size:.85rem;z-index:500;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px;box-shadow:var(--shl);color:var(--text)}
     .toast.show{transform:translateY(0);opacity:1}
     .toast.success{border-left:3px solid var(--green)}
     .toast.error{border-left:3px solid var(--red)}
@@ -281,6 +284,15 @@
     <input class="fi" id="adminEmail" type="email" placeholder="Admin email" autocomplete="username"/>
     <input class="fi" id="adminPass"  type="password" placeholder="Password" autocomplete="current-password"/>
     <button class="btn-red" id="adminLoginBtn">LOGIN TO DASHBOARD</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:.8rem 0;">
+      <div style="flex:1;height:1px;background:var(--border2)"></div>
+      <span style="font-size:.68rem;color:var(--muted);letter-spacing:2px;font-family:var(--font-cond);font-weight:600">OR</span>
+      <div style="flex:1;height:1px;background:var(--border2)"></div>
+    </div>
+    <button class="btn-google-admin" id="adminGoogleBtn">
+      <svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.826.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
+      CONTINUE WITH GOOGLE
+    </button>
     <div class="err" id="loginErr"></div>
   </div>
 </div>
@@ -701,12 +713,15 @@ let notifs = JSON.parse(localStorage.getItem('stAdmin_notifs') || '[]');
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js'
   ];
-  let n = 0;
-  scripts.forEach(src => {
-    const s = document.createElement('script'); s.src = src;
-    s.onload = () => { if(++n === scripts.length) init(); };
+  function loadNext(i) {
+    if (i >= scripts.length) { init(); return; }
+    const s = document.createElement('script');
+    s.src = scripts[i];
+    s.onload  = () => loadNext(i + 1);
+    s.onerror = () => loadNext(i + 1);
     document.head.appendChild(s);
-  });
+  }
+  loadNext(0);
 })();
 
 function init(){
@@ -716,14 +731,42 @@ function init(){
 
   document.getElementById('adminLoginBtn').addEventListener('click', doLogin);
   document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+  document.getElementById('adminGoogleBtn').addEventListener('click', doGoogleLogin);
   document.getElementById('adminLogout').addEventListener('click', doLogout);
 
   auth.onAuthStateChanged(async user => {
-    if(!user) return;
+    if (!user) {
+      // Show login screen
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').style.display  = 'none';
+      // Handle Google redirect result (mobile flow)
+      try {
+        const result = await auth.getRedirectResult();
+        if (result && result.user) {
+          const snap = await db.collection('users').doc(result.user.uid).get();
+          if (snap.exists && snap.data().role === 'admin') {
+            showDashboard(result.user.displayName || result.user.email);
+            addLog('🔑', 'Admin logged in via Google: ' + result.user.email);
+          } else {
+            await auth.signOut();
+            document.getElementById('loginErr').textContent = 'Access denied — this Google account is not an admin.';
+          }
+        }
+      } catch(e) { /* no redirect pending */ }
+      return;
+    }
+    // User is signed in — verify admin role
     try {
       const snap = await db.collection('users').doc(user.uid).get();
-      if(snap.exists && snap.data().role === 'admin') showDashboard(user.displayName || user.email);
-    } catch(e){}
+      if (snap.exists && snap.data().role === 'admin') {
+        showDashboard(user.displayName || user.email);
+      } else {
+        await auth.signOut();
+        document.getElementById('loginErr').textContent = 'Access denied — not an admin account.';
+      }
+    } catch(e) {
+      console.error('Admin auth check failed:', e);
+    }
   });
 
   // Sidebar nav
@@ -766,6 +809,38 @@ async function doLogin(){
   }
 }
 
+async function doGoogleLogin(){
+  const btn   = document.getElementById('adminGoogleBtn');
+  const errEl = document.getElementById('loginErr');
+  btn.textContent = 'Signing in...'; btn.disabled = true;
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    // Use redirect on mobile, popup on desktop
+    const isMobile = /iPhone|Android|iPad/i.test(navigator.userAgent);
+    let cred;
+    if (isMobile) {
+      await auth.signInWithRedirect(provider);
+      return; // page will reload; onAuthStateChanged handles result
+    } else {
+      cred = await auth.signInWithPopup(provider);
+    }
+    const snap = await db.collection('users').doc(cred.user.uid).get();
+    if(!snap.exists || snap.data().role !== 'admin'){
+      await auth.signOut();
+      errEl.textContent = 'Access denied — this Google account is not an admin.';
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.826.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg> CONTINUE WITH GOOGLE';
+      btn.disabled = false;
+      return;
+    }
+    showDashboard(cred.user.displayName || cred.user.email);
+    addLog('🔑','Admin logged in via Google: '+cred.user.email);
+  } catch(e){
+    errEl.textContent = 'Google sign-in failed. Try again.';
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.826.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg> CONTINUE WITH GOOGLE';
+    btn.disabled = false;
+  }
+}
+
 function doLogout(){
   auth.signOut();
   document.getElementById('dashboard').style.display = 'none';
@@ -801,26 +876,78 @@ function switchPanel(name){
 }
 
 /* ══ ORDERS ══ */
+let _ordersUnsubscribe = null;
 async function loadOrders(){
-  try {
-    const snap = await db.collection('orders').get();
-    allOrders = snap.docs.map(d => ({id:d.id,...d.data()}));
-    allOrders.sort((a,b) => {
-      const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.date||0);
-      const db2= b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.date||0);
-      return db2-da;
+  // Use real-time listener so new orders appear instantly without refreshing
+  if (_ordersUnsubscribe) _ordersUnsubscribe(); // clear previous listener
+  _ordersUnsubscribe = db.collection('orders')
+    .orderBy('createdAt','desc')
+    .onSnapshot(snap => {
+      const prev = allOrders.length;
+      allOrders = snap.docs.map(d => ({id:d.id,...d.data()}));
+      renderOrderStats();
+      renderOrdersTable(allOrders);
+      renderRecentOrders();
+      renderAnalytics();
+      // Check for new orders that came in after first load
+      if (prev > 0) {
+        snap.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            const o = {id: change.doc.id, ...change.doc.data()};
+            const oName = o.customerName || o.userName || 'Customer';
+            const oTotal = (o.total||0).toLocaleString('en-IN');
+            // In-app notification
+            addNotif('🛒', `New order #${o.id.slice(-8)} — ₹${oTotal} from ${oName}`, true);
+            // Browser push notification
+            triggerBrowserNotif(`🛒 New SELLTHEAD Order!`, `₹${oTotal} from ${oName} — #${o.id.slice(-8)}`);
+          }
+        });
+      } else {
+        // First load — check for unread new orders
+        checkNewOrderNotifs();
+        // Request browser notification permission on first load
+        requestNotifPermission();
+      }
+    }, err => {
+      console.warn('Real-time orders failed, falling back to one-time fetch:', err.message);
+      db.collection('orders').get().then(snap => {
+        allOrders = snap.docs.map(d => ({id:d.id,...d.data()}));
+        allOrders.sort((a,b) => {
+          const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.date||0);
+          const db2= b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.date||0);
+          return db2-da;
+        });
+        renderOrderStats(); renderOrdersTable(allOrders); renderRecentOrders(); renderAnalytics(); checkNewOrderNotifs();
+      }).catch(e => console.error(e));
     });
-    renderOrderStats();
-    renderOrdersTable(allOrders);
-    renderRecentOrders();
-    renderAnalytics();
-    checkNewOrderNotifs();
-  } catch(e){ console.error(e); }
+}
+
+// ── Browser Push Notifications ──
+function requestNotifPermission(){
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function triggerBrowserNotif(title, body){
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  try {
+    const n = new Notification(title, {
+      body,
+      icon: '../images/logo_icon.png',
+      badge: '../images/logo_icon.png',
+      tag: 'sellthead-order-' + Date.now(),
+      requireInteraction: true   // stays visible until you dismiss it
+    });
+    n.onclick = () => { window.focus(); n.close(); };
+  } catch(e){}
 }
 
 function renderOrderStats(){
   const total    = allOrders.length;
-  const pending  = allOrders.filter(o=>o.status==='Pending').length;
+  const pending  = allOrders.filter(o=>(o.status||'').toLowerCase()==='pending').length;
   const delivered= allOrders.filter(o=>o.status==='Delivered').length;
   const rev      = allOrders.filter(o=>o.status!=='Cancelled').reduce((s,o)=>s+(o.total||0),0);
   document.getElementById('statTotal').textContent    = total;
@@ -859,8 +986,8 @@ function renderOrdersTable(orders){
   tbody.innerHTML = orders.map(o => {
     const date  = o.date ? new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'N/A';
     const color = STATUS_COLORS[o.status]||'#888';
-    const items = Array.isArray(o.items) ? o.items.map(i=>`${i.title} ×${i.qty}`).join(', ') : 'N/A';
-    const name  = o.delivery ? `${o.delivery.fname||''} ${o.delivery.lname||''}`.trim() : (o.userName||'Guest');
+    const items = Array.isArray(o.items) ? o.items.map(i=>`${i.title||i.name||'Product'} ×${i.qty}`).join(', ') : 'N/A';
+    const name  = (o.customerName||o.userName||(o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():'')||'Guest').trim()||'Guest';
     const phone = o.delivery?.phone||'';
     const waMsg = encodeURIComponent(`Hi ${o.delivery?.fname||''}! Your SELLTHEAD order #${o.id} status update.`);
     return `<tr>
@@ -893,8 +1020,8 @@ function renderRecentOrders(){
     <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
     <tbody>${recent.map(o=>{
       const c=STATUS_COLORS[o.status]||'#888';
-      const name=o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():(o.userName||'Guest');
-      const date=o.date?new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'N/A';
+      const name=(o.customerName||o.userName||(o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():'')||'Guest').trim()||'Guest';
+      let _d6=null; if(o.createdAt?.toDate)_d6=o.createdAt.toDate(); else if(o.date)_d6=new Date(o.date); const date=_d6?_d6.toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'N/A';
       return `<tr>
         <td><span class="cell-red">#${o.id.slice(-8)}</span></td>
         <td style="font-weight:600">${name}</td>
@@ -930,7 +1057,7 @@ async function updateOrderStatus(orderId, newStatus){
 function openOrderModal(orderId){
   const o = allOrders.find(x=>x.id===orderId);
   if(!o) return;
-  const name  = o.delivery ? `${o.delivery.fname||''} ${o.delivery.lname||''}`.trim() : (o.userName||'Guest');
+  const name  = (o.customerName||o.userName||(o.delivery?`${o.delivery.fname||''} ${o.delivery.lname||''}`.trim():'')||'Guest').trim()||'Guest';
   const items = Array.isArray(o.items) ? o.items : [];
   const trackIdx = TRACK_STEPS.indexOf(o.status);
   const waMsg = encodeURIComponent(`Hi ${o.delivery?.fname||''}! Update on your SELLTHEAD order #${o.id}`);
@@ -941,9 +1068,9 @@ function openOrderModal(orderId){
       <div class="order-detail-label">Customer Info</div>
       <div class="order-detail-grid">
         <div><div class="odg-label">Name</div><div class="odg-val">${name}</div></div>
-        <div><div class="odg-label">Phone</div><div class="odg-val">${o.delivery?.phone||'N/A'}</div></div>
+        <div><div class="odg-label">Phone</div><div class="odg-val">${o.phone||o.delivery?.phone||'N/A'}</div></div>
         <div><div class="odg-label">Email</div><div class="odg-val" style="font-size:.78rem">${o.userEmail||'N/A'}</div></div>
-        <div><div class="odg-label">Date</div><div class="odg-val">${o.date?new Date(o.date).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'N/A'}</div></div>
+        <div><div class="odg-label">Date</div><div class="odg-val">${(()=>{let d=o.createdAt?.toDate?o.createdAt.toDate():(o.date?new Date(o.date):null);return d?d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'N/A';})()}</div></div>
       </div>
     </div>
     <div class="order-detail-section">
@@ -954,9 +1081,9 @@ function openOrderModal(orderId){
       <div class="order-detail-label">Items Ordered</div>
       ${items.map(item=>`
         <div class="order-item-row">
-          <img class="order-item-img" src="../${item.image||'images/products_ref.png'}" onerror="this.style.opacity='.3'" alt="${item.title}"/>
+          <img class="order-item-img" src="../${item.image||'images/products_ref.png'}" onerror="this.style.opacity='.3'" alt="${item.title||item.name||''}"/>
           <div style="flex:1">
-            <div class="order-item-name">${item.title}</div>
+            <div class="order-item-name">${item.title||item.name||'Product'}</div>
             <div class="order-item-sub">Size: ${item.size} · Qty: ${item.qty}</div>
           </div>
           <div class="cell-bold">₹${((item.price||0)*(item.qty||1)).toLocaleString('en-IN')}</div>
@@ -966,11 +1093,30 @@ function openOrderModal(orderId){
       </div>
     </div>
     <div class="order-detail-section">
-      <div class="order-detail-label">Payment</div>
-      <div class="order-detail-grid">
+      <div class="order-detail-label">Payment & Pricing</div>
+      <div class="order-detail-grid" style="grid-template-columns:1fr 1fr">
         <div><div class="odg-label">Method</div><div class="odg-val">${o.paymentMethod||'UPI'}</div></div>
         <div><div class="odg-label">Status</div><div class="odg-val" style="color:var(--green)">${o.paymentStatus||'Paid'}</div></div>
+        <div><div class="odg-label">Subtotal (Original)</div><div class="odg-val">₹${(o.subtotal||o.total||0).toLocaleString('en-IN')}</div></div>
+        <div><div class="odg-label">Amount Paid</div><div class="odg-val" style="color:var(--red);font-weight:800">₹${(o.total||0).toLocaleString('en-IN')}</div></div>
       </div>
+      ${o.discountCode ? `
+      <div style="margin-top:.8rem;background:rgba(30,161,90,.07);border:1px solid rgba(30,161,90,.2);border-radius:10px;padding:.75rem 1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+          <div>
+            <div style="font-size:.7rem;color:var(--muted);letter-spacing:.08em;margin-bottom:2px">DISCOUNT CODE USED</div>
+            <div style="font-family:var(--font-cond);font-size:1.3rem;letter-spacing:3px;color:var(--green);font-weight:600">${o.discountCode}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:2px">DISCOUNT GIVEN</div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--green)">−${o.discountPercent||0}% (−₹${((o.subtotal||o.total||0)-(o.total||0)).toLocaleString('en-IN')})</div>
+          </div>
+        </div>
+        <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(30,161,90,.15);font-size:.78rem;color:var(--muted)">
+          💡 <strong style="color:var(--text)">${o.discountCode}</strong> = ${(()=>{const code=(o.discountCode||'').toUpperCase();if(code.includes('PRATIK'))return 'Pratik — pay 10% commission';if(code.includes('PRIYANSH'))return 'Priyansh — pay 10% commission';if(code.includes('DISHANT'))return 'Dishant — pay 10% commission';if(code.includes('SAURABH'))return 'Saurabh — pay 10% commission';if(code.includes('PRINCE'))return 'Prince — pay 10% commission';if(code.includes('SAMAR'))return 'Samar — pay 10% commission';return 'Collaborator code';})()}
+          &nbsp;→ Commission: <strong style="color:var(--amber)">₹${Math.round((o.total||0)*((o.discountPercent||0)/100)).toLocaleString('en-IN')}</strong>
+        </div>
+      </div>` : '<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted)">No discount code used</div>'}
     </div>
     <div class="order-detail-section">
       <div class="order-detail-label">Order Progress</div>
@@ -1554,6 +1700,31 @@ function showToast(msg, type='success'){
   t.className = 'toast show '+type;
   clearTimeout(t._timer);
   t._timer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+<!-- Notification Permission Banner -->
+<div class="notif-allow-bar" id="notifAllowBar" style="display:none">
+  <span>🔔 <strong>Enable browser notifications</strong> to get alerted instantly when a new order arrives — even without keeping this tab open.</span>
+  <div style="display:flex;gap:.5rem">
+    <button onclick="enableBrowserNotifs()">ALLOW NOTIFICATIONS</button>
+    <button class="notif-bar-close" onclick="document.getElementById('notifAllowBar').style.display='none';localStorage.setItem('notifBarDismissed','1')">✕</button>
+  </div>
+</div>
+<script>
+// Show banner if permission not yet decided and not dismissed
+(function(){
+  if(!('Notification' in window)) return;
+  if(localStorage.getItem('notifBarDismissed')) return;
+  if(Notification.permission === 'default'){
+    setTimeout(()=>{ document.getElementById('notifAllowBar').style.display='flex'; }, 3000);
+  }
+})();
+function enableBrowserNotifs(){
+  Notification.requestPermission().then(p=>{
+    document.getElementById('notifAllowBar').style.display='none';
+    localStorage.setItem('notifBarDismissed','1');
+    if(p==='granted') addNotif('✅','Browser notifications enabled! You will be alerted for new orders.',false);
+  });
 }
 </script>
 </body>
