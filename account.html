@@ -107,7 +107,7 @@
       <div class="account-email" id="accountEmail"></div>
       <button class="avatar-url-btn" id="avatarUrlBtn">🔗 Use Image URL</button>
     </div>
-    <button class="btn-outline btn-sm" id="logoutBtn" style="margin-left:auto">LOGOUT</button>
+    <button class="btn-outline btn-sm" id="logoutBtn" style="margin-left:auto;display:inline-flex;align-items:center;gap:.45rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>LOGOUT</button>
   </div>
 
   <div class="account-tabs">
@@ -132,7 +132,7 @@
         <label class="form-label">Phone</label>
         <input class="form-input" id="profPhone" type="tel" placeholder="10-digit number" />
       </div>
-      <button class="btn-red" id="saveProfile" style="margin-top:.5rem">SAVE CHANGES</button>
+      <button class="btn-red" id="saveProfile" style="margin-top:.5rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>SAVE CHANGES</button>
     </div>
   </div>
 
@@ -520,7 +520,7 @@ async function loadAccountOrders() {
 
 <!-- ─── CROP MODAL ─── -->
 <div id="cropModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
-  <div style="background:#0d1117;border:1px solid rgba(232,28,28,.25);border-radius:18px;padding:1.5rem;width:min(340px,94vw);text-align:center;">
+  <div style="background:#1A1C22;border:1px solid rgba(232,28,28,.25);border-radius:18px;padding:1.5rem;width:min(340px,94vw);text-align:center;">
     <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:800;letter-spacing:.15em;color:rgba(255,255,255,.5);margin-bottom:.8rem;">ADJUST PROFILE PICTURE</div>
     <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;border:2px solid rgba(232,28,28,.35);">
       <canvas id="cropCanvas" width="280" height="280" style="display:block;cursor:grab;touch-action:none;"></canvas>
