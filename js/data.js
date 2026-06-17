@@ -17,8 +17,9 @@ const PRODUCTS = [
     reviews: 127,
     category: ["compression"],
     tags: ["Compression", "Dry Fit", "Gym", "Polyester", "Athletic", "Bullar"],
-    image: "images/bullar_ct_2.png",
+    image: "images/bullar_ct_5.png",
     images: [
+      "images/bullar_ct_5.png",
       "images/bullar_ct_2.png",
       "images/bullar_ct_1.png",
       "images/bullar_ct_3.png",
