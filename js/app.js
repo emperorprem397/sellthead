@@ -574,7 +574,7 @@ function showLoginGate(){
       <div class="lg-title">Welcome 👋</div>
       <div class="lg-sub">Sign in to shop, track orders, and get exclusive deals.</div>
       <div class="lg-actions">
-        <button class="lg-btn-primary" onclick="openAuthModal('login')">LOGIN / REGISTER</button>
+        <button class="lg-btn-primary" id="lgLoginBtn" type="button">LOGIN / REGISTER</button>
       </div>
       <div class="lg-note">Already logged in? Your session will restore automatically.</div>
     </div>`;
@@ -599,10 +599,8 @@ function showLoginGate(){
     #loginGate .lg-title { font-family:'Montserrat',sans-serif; font-size:1.3rem; font-weight:800; margin-bottom:.5rem; }
     #loginGate .lg-sub { font-size:.85rem; color:rgba(255,255,255,.55); margin-bottom:2rem; line-height:1.55; }
     #loginGate .lg-actions { display:flex; flex-direction:column; gap:.7rem; }
-    #loginGate .lg-btn-primary { padding:.9rem; background:#e81c1c; color:#fff; border:none; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:.88rem; font-weight:800; letter-spacing:.05em; cursor:pointer; transition:background .2s; }
-    #loginGate .lg-btn-primary:hover { background:#b01010; }
-    #loginGate .lg-btn-ghost { padding:.8rem; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.65); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; }
-    #loginGate .lg-btn-ghost:hover { background:rgba(255,255,255,.1); color:#fff; }
+    #loginGate .lg-btn-primary { padding:.9rem; background:#e81c1c; color:#fff; border:none; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:.88rem; font-weight:800; letter-spacing:.05em; cursor:pointer; transition:background .2s; -webkit-tap-highlight-color:rgba(255,255,255,.2); touch-action:manipulation; }
+    #loginGate .lg-btn-primary:hover, #loginGate .lg-btn-primary:active { background:#b01010; }
     #loginGate .lg-note { font-size:.7rem; color:rgba(255,255,255,.25); margin-top:1.2rem; }
   `;
   document.head.appendChild(style);
@@ -610,6 +608,30 @@ function showLoginGate(){
   requestAnimationFrame(() => gate.classList.add('open'));
   // Prevent closing by clicking overlay - mandatory login
   gate.querySelector('.lg-overlay').addEventListener('click', e => e.stopPropagation());
+
+  // Wire up the LOGIN/REGISTER button reliably (addEventListener, not inline onclick —
+  // inline onclick attributes can silently fail on some mobile browsers)
+  const lgLoginBtn = gate.querySelector('#lgLoginBtn');
+  if (lgLoginBtn) {
+    let gateLoginFired = false;
+    const handleGateLogin = (e) => {
+      e.preventDefault();
+      if (gateLoginFired) return; // prevent double-fire from touchend + click
+      gateLoginFired = true;
+      setTimeout(() => { gateLoginFired = false; }, 500);
+      gate.classList.remove('open');
+      if (typeof window.openModal === 'function') {
+        window.openModal('login');
+      } else {
+        // Fallback: openModal not ready yet, retry shortly
+        setTimeout(() => {
+          if (typeof window.openModal === 'function') window.openModal('login');
+        }, 300);
+      }
+    };
+    lgLoginBtn.addEventListener('click', handleGateLogin);
+    lgLoginBtn.addEventListener('touchend', handleGateLogin);
+  }
 }
 
 /* ─── HANDLE GOOGLE REDIRECT RESULT ON PAGE LOAD ─── */
