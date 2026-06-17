@@ -136,8 +136,9 @@ const PRODUCTS = [
     reviews: 96,
     category: ["equipment"],
     tags: ["Resistance Band", "Pull Up Assist", "Crossfit", "Powerlifting", "Mobility", "Rehabilitation", "Druklife"],
-    image: "images/resistance_band_4.png",
+    image: "images/resistance_band_5.png",
     images: [
+      "images/resistance_band_5.png",
       "images/resistance_band_1.png",
       "images/resistance_band_2.png",
       "images/resistance_band_3.png",
