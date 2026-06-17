@@ -123,6 +123,45 @@ const PRODUCTS = [
     inStock: true,
     featured: true
   },
+  {
+    id: 7,
+    title: "Druklife Professional 13MM Pull Up Resistance Band",
+    shortTitle: "Resistance Band",
+    brand: "DRUKLIFE",
+    type: "Resistance Training Band",
+    slug: "resistance-band",
+    price: 211,
+    oldPrice: 299,
+    rating: 4.7,
+    reviews: 96,
+    category: ["equipment"],
+    tags: ["Resistance Band", "Pull Up Assist", "Crossfit", "Powerlifting", "Mobility", "Rehabilitation", "Druklife"],
+    image: "images/resistance_band_4.png",
+    images: [
+      "images/resistance_band_1.png",
+      "images/resistance_band_2.png",
+      "images/resistance_band_3.png",
+      "images/resistance_band_4.png"
+    ],
+    description: "Take your training to the next level with the Druklife Professional 13MM Pull Up Resistance Band — built for strength training, crossfit, stretching, powerlifting, mobility work, and rehabilitation. Made from premium rubber that supports 5-35lbs of tension, this band offsets your body weight on pull-ups and dips, helping you get more reps and build strength faster.\\n\\nWhether you are working your core, legs, back, or arms, this single band adds a new dimension to almost any workout. Use it for assisted chin-ups, banded squats, mobility drills, or physical therapy — at the gym, at home, or at the office.",
+    highlights: [
+      "Pull-Up Progression — Bands Offset Body Weight for More Reps",
+      "Stretching & Strengthening for Arms, Back, Shoulders, Legs & Glutes",
+      "Great for Rehabilitation — Helps Strengthen Torn Ligaments & Muscles",
+      "Works With Most Gym Machines for Added Resistance",
+      "Train Anywhere — Gym, Home, or Office",
+      "Material: Premium Rubber — Tension Supported: 5-35lbs",
+      "Thickness: 0.2in — Width: 0.5in — Circumference: 81.9in",
+      "Country of Origin: China"
+    ],
+    fabric: "Rubber",
+    sleeve: "—",
+    fit: "One Size",
+    sizeChart: [],
+    sizes: ["One Size"],
+    inStock: true,
+    featured: true
+  },
 ];
 
 const DISCOUNT_CODES = {
